@@ -1,0 +1,21 @@
+{
+  "data": [
+    {
+      "id": 10,
+      "email": "johndoe@email.com",
+      "name": "John Doe",
+      "country": "PT",
+      "lang": "PT",
+      "active": true,
+      "deleted": false
+    }
+  ],
+  "metadata": {
+    "current_page": 1,
+    "next_page": 2,
+    "previous_page": 1,
+    "per_page": 5,
+    "current": 5,
+    "total": 10
+  }
+}

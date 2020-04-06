@@ -1,0 +1,110 @@
+Table users {
+  id int [pk, increment]
+  currency_id int [ref: > currencies.id]
+  country_id int [not null, ref: > countries.id]
+  lang_id int
+  email varchar [not null]
+  first_name varchar
+  last_name varchar
+  password varchar [not null]
+  password_reset varchar
+  active bool
+  created_at timestamp [default: `now()`]
+  updated_at timestamp [default: null]
+  deleted_at timestamp [default: null]
+}
+
+Table currencies {
+  id int [pk, increment]
+  name varchar
+  symbol varchar
+}
+
+Table countries {
+  id int [pk, increment]
+  currency_id int [ref: > currencies.id]
+  name varchar
+  iso_code varchar
+}
+
+//PORTFOLIOS TABLES
+Table stocks {
+  id int [pk, increment]
+  country_id int [ref: > countries.id]
+  symbol varchar
+  company_name varchar
+  price float
+  min_price float
+  max_price float
+  daily_change float [default: 0]
+  daily_change_percentage float [default: 0]
+  year_change float [default: 0]
+  year_change_percentage float [default: 0]
+  div_yield float
+  div_share float
+  eps float
+}
+
+Table portfolios {
+  id int [pk, increment]
+  user_id int [ref: > users.id]
+  currency_id int [ref: > currencies.id]
+  name varchar
+  cost float [default: 0]
+  value float [default: 0]
+  total_change float [default: 0]
+  total_change_percentage float [default: 0]
+  daily_change float [default: 0]
+  daily_change_percentage float [default: 0]
+  unrealised_gain_loss float [default: 0]
+  realised_gain_loss float [default: 0]
+  expected_div_yield float [default: 0]
+  expected_div float [default: 0]
+  div_collected float [default: 0]
+  created_at timestamp [default: `now()`]
+  updated_at timestamp [default: null]
+  deleted_at timestamp [default: null]
+}
+
+Table portfolios_stocks {
+  portfolio_id int [ref: > portfolios.id]
+  stock_id int [ref: > stocks.id]
+  type varchar
+  shares float
+  cost float
+  value float
+  total_change float [default: 0]
+  total_change_percentage float [default: 0]
+  daily_change float [default: 0]
+  daily_change_percentage float [default: 0]
+  unrealised_gain_loss float [default: 0]
+  realised_gain_loss float [default: 0]
+  expected_div_yield float [default: 0]
+  expected_div float [default: 0]
+  div_collected float [default: 0]
+  created_at timestamp [default: `now()`]
+  updated_at timestamp [default: null]
+  deleted_at timestamp [default: null]
+}
+
+Table portfolio_transaction {
+  id int [pk, increment]
+  portfolio_id int [ref: > portfolios.id]
+  stock_id int [ref: > stocks.id]
+  type varchar
+  shares float
+  amount float
+  cost_per_share float
+  fees float [default: 0]
+  created_at timestamp [default: `now()`]
+}
+
+Table portfolio_history {
+  id int [pk, increment]
+  portfolio_id int [ref: > portfolios.id]
+  value float
+  gain_loss float
+  daily_gain_loss float [default: 0]
+  div_collected float [default: 0]
+  created_at timestamp [default: `now()`]
+}

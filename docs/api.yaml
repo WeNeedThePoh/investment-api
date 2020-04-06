@@ -1,0 +1,31 @@
+openapi: 3.0.1
+servers:
+  - url: '{scheme}://api.xxx.com'
+    variables:
+      scheme:
+        description: 'The Investment-API is accessible via https and http'
+        enum:
+          - 'https'
+          - 'http'
+        default: 'https'
+info:
+  description: >-
+    This API is to serve the investments platform. An REST API built to be fast, flexible and simple.
+  version: 1.0.0
+  title: Investment-API
+  contact:
+    name: WeNeedThePoh
+    url: 'https://github.com/WeNeedThePoh'
+paths:
+  /users:
+    get:
+      summary: Fetch all users
+      responses:
+        '200':
+          description: Returns a list of all users
+          content:
+            application/json:
+              schema:
+                $ref: 'schemas/users.yaml'
+              example:
+                $ref: 'examples/users.json'

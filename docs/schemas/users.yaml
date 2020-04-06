@@ -1,0 +1,40 @@
+type: object
+properties:
+  data:
+    type: array
+    items:
+      type: object
+      properties:
+        id:
+          type: integer
+        email:
+          type: string
+        name:
+          type: string
+        country:
+          type: string
+          pattern: '^[A-Z]{2}$'
+        lang:
+          type: string
+          pattern: '^[A-Z]{2}$'
+        active:
+          type: boolean
+          default: true
+        deleted:
+          type: boolean
+          default: false
+  metadata:
+    type: object
+    properties:
+      current_page:
+        type: integer
+      next_page:
+        type: integer
+      previous_page:
+        type: integer
+      per_page:
+        type: integer
+      current:
+        type: integer
+      total:
+        type: integer
