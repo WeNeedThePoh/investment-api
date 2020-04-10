@@ -1,0 +1,40 @@
+type: object
+properties:
+  id:
+    type: integer
+    readOnly: true
+  email:
+    type: string
+  old_password:
+    type: string
+    writeOnly: true
+  password:
+    type: string
+    writeOnly: true
+  first_name:
+    type: string
+    writeOnly: true
+  last_name:
+    type: string
+    writeOnly: true
+  name:
+    type: string
+    readOnly: true
+  country:
+    type: string
+    pattern: '^[A-Z]{2}$'
+  lang:
+    type: string
+    pattern: '^[A-Z]{2}$'
+  active:
+    type: boolean
+    default: true
+  deleted:
+    type: boolean
+    default: false
+required:
+  - email
+  - old_password
+  - password
+  - first_name
+  - country

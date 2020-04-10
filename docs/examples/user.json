@@ -1,0 +1,11 @@
+{
+  "data": {
+    "id": 10,
+    "email": "johndoe@email.com",
+    "name": "John Doe",
+    "country": "PT",
+    "lang": "PT",
+    "active": true,
+    "deleted": false
+  }
+}

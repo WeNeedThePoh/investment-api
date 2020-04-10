@@ -20,12 +20,75 @@ paths:
   /users:
     get:
       summary: Fetch all users
+      tags:
+        - users
       responses:
         '200':
-          description: Returns a list of all users
+          description: List of all users
           content:
             application/json:
               schema:
-                $ref: 'schemas/users.yaml'
+                $ref: 'schemas/user.yaml'
               example:
                 $ref: 'examples/users.json'
+    post:
+      summary: Add a new user
+      tags:
+        - users
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: 'schemas/user.yaml'
+            example:
+              $ref: 'examples/user_post.json'
+      responses:
+        '200':
+          description: The new user data
+          content:
+            application/json:
+              schema:
+                $ref: 'schemas/user.yaml'
+              example:
+                $ref: 'examples/users.json'
+  /users/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+    get:
+      summary: Fetch a specific user
+      tags:
+        - users
+      responses:
+        '200':
+          description: User data
+          content:
+            application/json:
+              schema:
+                $ref: 'schemas/user.yaml'
+              example:
+                $ref: 'examples/user.json'
+    put:
+      summary: Update a specific user
+      tags:
+        - users
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: 'schemas/user.yaml'
+            example:
+              $ref: 'examples/user_put.json'
+      responses:
+        '204':
+          description: The user was updated successfully.
+    delete:
+      summary: Delete a specific user
+      tags:
+        - users
+      responses:
+        '204':
+          description: The user was deleted successfully.

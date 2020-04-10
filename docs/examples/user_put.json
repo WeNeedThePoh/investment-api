@@ -1,0 +1,9 @@
+{
+  "email": "johndoe@email.com",
+  "old_password": "myP@ssword123",
+  "password": "myNEWP@ssword123",
+  "fisrt_name": "John",
+  "last_name": "Doe",
+  "country": "PT",
+  "lang": "US"
+}
