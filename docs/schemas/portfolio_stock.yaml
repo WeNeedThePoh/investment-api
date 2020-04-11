@@ -1,0 +1,55 @@
+type: object
+properties:
+  portfolio_id:
+    type: integer
+  stock:
+    type: string
+  type:
+    type: string
+  shares:
+    type: float
+  cost:
+    type: float
+  value:
+    type: float
+    readOnly: true
+  avg_share_cost:
+    type: float
+    readOnly: true
+  total_change:
+    type: float
+    readOnly: true
+  total_change_percentage:
+    type: float
+    readOnly: true
+  daily_change:
+    type: float
+    readOnly: true
+  daily_change_percentage:
+    type: float
+    readOnly: true
+  unrealised_gain_loss:
+    type: float
+    readOnly: true
+  realised_gain_loss:
+    type: float
+    readOnly: true
+  expected_div_yield:
+    type: float
+    readOnly: true
+  expected_div:
+    type: float
+    readOnly: true
+  div_collected:
+    type: float
+    readOnly: true
+  deleted:
+    type: boolean
+    default: false
+    readOnly: true
+required:
+  - portfolio_id
+  - stock
+  - type
+  - shares
+  - cost

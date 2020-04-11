@@ -92,3 +92,82 @@ paths:
       responses:
         '204':
           description: The user was deleted successfully.
+  /users/{id}/portfolios:
+    parameters:
+      - name: id
+        in: path
+        required: true
+    get:
+      summary: Get all user's portfolios
+      tags:
+        - portfolios
+      responses:
+        200:
+          description: User's portfolios
+          content:
+            application/json:
+              schema:
+                $ref: 'schemas/portfolio.yaml'
+              example:
+                $ref: 'examples/portfolios.json'
+    post:
+      summary: Add a new portfolio
+      tags:
+        - portfolios
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: 'schemas/portfolio.yaml'
+            example:
+              $ref: 'examples/portfolio_post.json'
+      responses:
+        200:
+          description: The portfolio was added successfully.
+          content:
+            application/json:
+              schema:
+                $ref: 'schemas/portfolio.yaml'
+              example:
+                $ref: 'examples/portfolios.json'
+  /users/{id}/portfolios/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+    get:
+      summary: Get user's specific portfolio
+      tags:
+        - portfolios
+      responses:
+        200:
+          description: User's specific portfolio
+          content:
+            application/json:
+              schema:
+                $ref: 'schemas/portfolio.yaml'
+              example:
+                $ref: 'examples/portfolio.json'
+    put:
+      summary: Update a specific portfolio
+      tags:
+        - portfolios
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: 'schemas/portfolio.yaml'
+            example:
+              $ref: 'examples/portfolio_put.json'
+      responses:
+        '204':
+          description: The portfolio was updated successfully.
+    delete:
+      summary: Delete a specific portfolio
+      tags:
+        - portfolios
+      responses:
+        '204':
+          description: The portfolio was deleted successfully.

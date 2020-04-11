@@ -73,6 +73,7 @@ Table portfolios_stocks {
   shares float
   cost float
   value float
+  avg_share_cost float
   total_change float [default: 0]
   total_change_percentage float [default: 0]
   daily_change float [default: 0]

@@ -1,0 +1,21 @@
+{
+  "data": {
+    "id": 10,
+    "user_id": 1,
+    "name": "My portfolio",
+    "currency": "EUR",
+    "cost": 12000.31,
+    "value": 15000.31,
+    "stocks": [],
+    "total_change": 3000.00,
+    "total_change_percentage": 20.00,
+    "daily_change": 300.45,
+    "daily_change_percentage": 2.45,
+    "unrealised_gain_loss": 3000,
+    "realised_gain_loss": 0,
+    "expected_div_yield": 4.61,
+    "expected_div": 800.87,
+    "div_collected": 0,
+    "deleted": false
+  }
+}
