@@ -52,9 +52,9 @@ paths:
                 $ref: 'schemas/user.yaml'
               example:
                 $ref: 'examples/users.json'
-  /users/{id}:
+  /users/{user-id}:
     parameters:
-      - name: id
+      - name: user-id
         in: path
         required: true
     get:
@@ -92,9 +92,9 @@ paths:
       responses:
         '204':
           description: The user was deleted successfully.
-  /users/{id}/portfolios:
+  /users/{user-id}/portfolios:
     parameters:
-      - name: id
+      - name: user-id
         in: path
         required: true
     get:
@@ -131,9 +131,12 @@ paths:
                 $ref: 'schemas/portfolio.yaml'
               example:
                 $ref: 'examples/portfolios.json'
-  /users/{id}/portfolios/{id}:
+  /users/{user-id}/portfolios/{portfolio-id}:
     parameters:
-      - name: id
+      - name: user-id
+        in: path
+        required: true
+      - name: portfolio-id
         in: path
         required: true
     get:
@@ -171,3 +174,91 @@ paths:
       responses:
         '204':
           description: The portfolio was deleted successfully.
+  /users/{user-id}/portfolios/{portfolio-id}/transactions:
+    parameters:
+      - name: user-id
+        in: path
+        required: true
+      - name: portfolio-id
+        in: path
+        required: true
+    get:
+      summary: Get all portfolio transactions
+      tags:
+        - transactions
+      responses:
+        200:
+          description: All portfolio transactions data
+          content:
+            application/json:
+              schema:
+                $ref: 'schemas/transaction.yaml'
+              example:
+                $ref: 'examples/transactions.json'
+    post:
+      summary: Add a new transaction
+      tags:
+        - transactions
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: 'schemas/transaction.yaml'
+            example:
+              $ref: 'examples/transaction_post.json'
+      responses:
+        200:
+          description: The transaction was added successfully.
+          content:
+            application/json:
+              schema:
+                $ref: 'schemas/transaction.yaml'
+              example:
+                $ref: 'examples/transactions.json'
+  /users/{user-id}/portfolios/{portfolio-id}/transactions/{transaction-id}:
+    parameters:
+      - name: user-id
+        in: path
+        required: true
+      - name: portfolio-id
+        in: path
+        required: true
+      - name: transaction-id
+        in: path
+        required: true
+    get:
+      summary: Get a specific transaction
+      tags:
+        - transactions
+      responses:
+        200:
+          description: Transaction data
+          content:
+            application/json:
+              schema:
+                $ref: 'schemas/transaction.yaml'
+              example:
+                $ref: 'examples/transaction.json'
+    put:
+      summary: Update a specific transaction
+      tags:
+        - transactions
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: 'schemas/transaction.yaml'
+            example:
+              $ref: 'examples/transaction_put.json'
+      responses:
+        '204':
+          description: The transaction was updated successfully.
+    delete:
+      summary: Delete a specific transaction
+      tags:
+        - transactions
+      responses:
+        '204':
+          description: The transaction was deleted successfully.

@@ -1,0 +1,23 @@
+{
+  "data": [
+    {
+      "id": 10,
+      "portfolio_id": 1,
+      "stock": "AAPL",
+      "type": "Buy",
+      "shares": 5.312351,
+      "cost_per_share": 260.54,
+      "amount": 1384.0799,
+      "fees": 1.10,
+      "deleted": false
+    }
+  ],
+  "metadata": {
+    "current_page": 1,
+    "next_page": 2,
+    "previous_page": 1,
+    "per_page": 5,
+    "current": 5,
+    "total": 10
+  }
+}

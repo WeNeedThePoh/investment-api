@@ -1,0 +1,31 @@
+type: object
+properties:
+  id:
+    type: integer
+    readOnly: true
+  portfolio_id:
+    type: integer
+  stock:
+    type: string
+  type:
+    type: string
+  shares:
+    type: float
+  cost_per_share:
+    type: float
+  amount:
+    type: float
+    readOnly: true
+  fees:
+    type: float
+    default: 0
+  deleted:
+    type: boolean
+    default: false
+    readOnly: true
+required:
+  - portfolio_id
+  - stock
+  - type
+  - shares
+  - cost_per_share

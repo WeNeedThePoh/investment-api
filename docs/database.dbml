@@ -98,6 +98,7 @@ Table portfolio_transaction {
   cost_per_share float
   fees float [default: 0]
   created_at timestamp [default: `now()`]
+  deleted_at timestamp [default: null]
 }
 
 Table portfolio_history {
