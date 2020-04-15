@@ -34,7 +34,7 @@ CREATE TABLE investments.users (
 CREATE TABLE investments.stocks (
     id SERIAL,
     country_id INT NOT NULL,
-    symbol VARCHAR(3) NOT NULL,
+    symbol VARCHAR(10) NOT NULL,
     company_name VARCHAR(50) NOT NULL,
     price FLOAT NOT NULL,
     min_price FLOAT NOT NULL,
