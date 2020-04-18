@@ -69,7 +69,7 @@ func (account *Account) Create() (map[string]interface{}) {
 	//Create new JWT token for the newly registered account
 	tk := &Token{UserId: account.ID}
 	token := jwt.NewWithClaims(jwt.GetSigningMethod("HS256"), tk)
-	tokenString, _ := token.SignedString([]byte(os.Getenv("token_password")))
+	tokenString, _ := token.SignedString([]byte(os.Getenv("JWT_SECRET")))
 	account.Token = tokenString
 
 	account.Password = "" //delete password
@@ -100,7 +100,7 @@ func Login(email, password string) (map[string]interface{}) {
 	//Create JWT token
 	tk := &Token{UserId: account.ID}
 	token := jwt.NewWithClaims(jwt.GetSigningMethod("HS256"), tk)
-	tokenString, _ := token.SignedString([]byte(os.Getenv("token_password")))
+	tokenString, _ := token.SignedString([]byte(os.Getenv("JWT_SECRET")))
 	account.Token = tokenString //Store the token in the response
 
 	resp := u.Message(true, "Logged In")
