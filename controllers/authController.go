@@ -1,15 +1,8 @@
 package controllers
 
-import (
-	"encoding/json"
-	"investment-api/models"
-	u "investment-api/utils"
-	"net/http"
-)
+/*var CreateAccount = func(w http.ResponseWriter, r *http.Request) {
 
-var CreateAccount = func(w http.ResponseWriter, r *http.Request) {
-
-	account := &models.Account{}
+	account := &models.User{}
 	err := json.NewDecoder(r.Body).Decode(account) //decode the request body into struct and failed if any error occur
 	if err != nil {
 		u.Respond(w, u.Message(false, "Invalid request"))
@@ -18,11 +11,11 @@ var CreateAccount = func(w http.ResponseWriter, r *http.Request) {
 
 	resp := account.Create() //Create account
 	u.Respond(w, resp)
-}
+}*/
 
-var Authenticate = func(w http.ResponseWriter, r *http.Request) {
+/*var Authenticate = func(w http.ResponseWriter, r *http.Request) {
 
-	account := &models.Account{}
+	account := &models.User{}
 	err := json.NewDecoder(r.Body).Decode(account) //decode the request body into struct and failed if any error occur
 	if err != nil {
 		u.Respond(w, u.Message(false, "Invalid request"))
@@ -31,4 +24,4 @@ var Authenticate = func(w http.ResponseWriter, r *http.Request) {
 
 	resp := models.Login(account.Email, account.Password)
 	u.Respond(w, resp)
-}
+}*/

@@ -1,14 +1,16 @@
 package controllers
 
 import (
-	"encoding/json"
+	"fmt"
+	"github.com/gorilla/mux"
 	"investment-api/models"
 	u "investment-api/utils"
 	"net/http"
+	"strconv"
+	_ "strconv"
 )
 
-var CreateContact = func(w http.ResponseWriter, r *http.Request) {
-
+/*var CreateUser = func(w http.ResponseWriter, r *http.Request) {
 	user := r.Context().Value("user").(uint) //Grab the id of the user that send the request
 	contact := &models.Contact{}
 
@@ -21,13 +23,20 @@ var CreateContact = func(w http.ResponseWriter, r *http.Request) {
 	contact.UserId = user
 	resp := contact.Create()
 	u.Respond(w, resp)
-}
+}*/
 
-var GetContactsFor = func(w http.ResponseWriter, r *http.Request) {
+var GetUser = func(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	id, err := strconv.ParseUint(vars["id"], 10, 64)
+	if err != nil {
+		fmt.Println(err)
+	}
 
-	id := r.Context().Value("user").(uint)
-	data := models.GetContacts(id)
-	resp := u.Message(true, "success")
-	resp["data"] = data
-	u.Respond(w, resp)
+	user := models.GetUser(uint(id))
+	if user == nil {
+		u.Fail(w, "User not found", "", 404)
+		return
+	}
+
+	u.Success(w, user.ToMap())
 }

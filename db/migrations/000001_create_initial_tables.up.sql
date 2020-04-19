@@ -1,12 +1,12 @@
 -- CURRENCIES
-CREATE TABLE investments.currencies (
+CREATE TABLE currencies (
     id SERIAL,
     name VARCHAR(20) NOT NULL,
     symbol VARCHAR(3) NOT NULL
 );
 
 -- COUNTRIES
-CREATE TABLE investments.countries (
+CREATE TABLE countries (
     id SERIAL,
     currency_id INT NOT NULL,
     name VARCHAR(25) NOT NULL,
@@ -14,7 +14,7 @@ CREATE TABLE investments.countries (
 );
 
 -- USERS
-CREATE TABLE investments.users (
+CREATE TABLE users (
     id SERIAL,
     currency_id INT,
     country_id INT NOT NULL,
@@ -31,7 +31,7 @@ CREATE TABLE investments.users (
 );
 
 -- STOCKS
-CREATE TABLE investments.stocks (
+CREATE TABLE stocks (
     id SERIAL,
     country_id INT NOT NULL,
     symbol VARCHAR(10) NOT NULL,
@@ -49,7 +49,7 @@ CREATE TABLE investments.stocks (
 );
 
 -- PORTFOLIOS
-CREATE TABLE investments.portfolios (
+CREATE TABLE portfolios (
     id SERIAL,
     user_id INT NOT NULL,
     currency_id INT NOT NULL,
@@ -71,7 +71,7 @@ CREATE TABLE investments.portfolios (
 );
 
 -- PORTFOLIO STOCKS
-CREATE TABLE investments.portfolio_stocks (
+CREATE TABLE portfolio_stocks (
     portfolio_id INT NOT NULL,
     stock_id INT NOT NULL,
     type VARCHAR(10) NOT NULL,
@@ -94,7 +94,7 @@ CREATE TABLE investments.portfolio_stocks (
 );
 
 -- TRANSACTIONS
-CREATE TABLE investments.portfolio_transactions (
+CREATE TABLE portfolio_transactions (
     id SERIAL,
     portfolio_id INT NOT NULL,
     stock_id INT NOT NULL,
@@ -109,7 +109,7 @@ CREATE TABLE investments.portfolio_transactions (
 );
 
 -- HISTORY
-CREATE TABLE investments.portfolio_history (
+CREATE TABLE portfolio_history (
     id SERIAL,
     portfolio_id INT NOT NULL,
     market_value FLOAT,

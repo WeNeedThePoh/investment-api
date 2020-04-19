@@ -1,3 +1,3 @@
-TRUNCATE investments.currencies;
-TRUNCATE investments.countries;
-TRUNCATE investments.stocks;
+TRUNCATE currencies;
+TRUNCATE countries;
+TRUNCATE stocks;
