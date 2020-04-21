@@ -11,7 +11,7 @@ HOST_IP=$(shell ipconfig getifaddr en0)
 PROJECT_NAME := $(shell basename "$(PWD)")
 
 STDERR := /tmp/.$(PROJECT_NAME)-stderr.txt
-PID := /tmp/.$(PROJECT_NAME).pid
+PID := .$(PROJECT_NAME).pid
 
 GOBASE := $(shell pwd)
 GOPATH := $(GOBASE)/vendor:$(GOBASE)
@@ -37,16 +37,18 @@ help:
 .PHONY: install
 install: dep_tidy
 
-.PHONY: start
 start:
 	bash -c "trap 'make stop' EXIT; $(MAKE) compile start-server watch run='make compile start-server'"
 
-.PHONY: stop
 stop: stop-server
 
+run:
+	@echo "$(OK_COLOR)==> $(PROJECT_NAME) is available at $(APP_URL) (DEV) $(NO_COLOR)"
+	@go run main.go
+
 start-server: stop-server
-	@echo "  >  $(PROJECT_NAME) is available at $(APP_URL)"
-	@-$(GOBIN)/$(PROJECT_NAME) 2>&1 & echo $$! > $(PID)
+	@echo "$(OK_COLOR)==> $(PROJECT_NAME) is available at $(APP_URL) $(NO_COLOR)"
+	@$(GOBIN)/$(PROJECT_NAME) 2>&1 & echo $$! > $(PID)
 	@cat $(PID) | sed "/^/s/^/  \>  PID: /"
 
 stop-server:
@@ -54,7 +56,6 @@ stop-server:
 	@-kill `cat $(PID)` 2> /dev/null || true
 	@-rm $(PID)
 
-.PHONY: compile
 compile: dep_get build
 
 build:
@@ -83,4 +84,4 @@ migrate_down:
 	@migrate -source file://${DB_MIGRATION_PATH} -database ${DB_DRIVE}://${DB_HOST}:${DB_PORT}/${DB_NAME}?sslmode=${DB_SSL} down
 
 watch:
-	@GOBIN=$(GOBIN) yolo -i . -e vendor -e bin -c $(run)
+	@GOBIN=$(GOBIN) yolo -i . -e vendor -e bin -c "$(run)"
