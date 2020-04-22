@@ -75,6 +75,11 @@ clean:
 	@ go clean -modcache
 	@ rm -rf $(GOBIN)
 
+lint:
+	@ echo "$(OK_COLOR)==> Running linter... $(NO_COLOR)"
+	@ go fmt
+	@ golint ./
+
 migrate_up:
 	@echo "$(OK_COLOR)==> Migrating DB... $(NO_COLOR)"
 	@migrate -source file://${DB_MIGRATION_PATH} -database ${DB_DRIVE}://${DB_HOST}:${DB_PORT}/${DB_NAME}?sslmode=${DB_SSL} up

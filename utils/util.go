@@ -5,10 +5,16 @@ import (
 	"net/http"
 )
 
-func Success(w http.ResponseWriter, data map[string]interface{}) {
-	response := map[string]interface{}{"data": data}
+func Success(w http.ResponseWriter, data map[string]interface{}, statusCode int) {
+	response := make(map[string]interface{})
+	if data != nil {
+		response = map[string]interface{}{"data": data}
+	}
 
-	Respond(w, response, 200)
+	if statusCode == 0 {
+		statusCode = 200
+	}
+	Respond(w, response, statusCode)
 }
 
 func Fail(w http.ResponseWriter, message string, detail string, statusCode int) {

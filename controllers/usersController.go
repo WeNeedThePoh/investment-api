@@ -38,5 +38,21 @@ var GetUser = func(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	u.Success(w, user.ToMap())
+	u.Success(w, user.ToMap(), 200)
+}
+
+var DeleteUser = func(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	id, err := strconv.ParseUint(vars["id"], 10, 64)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	deleted, message, code := models.DeleteUser(uint(id))
+	if deleted == false {
+		u.Fail(w, message, "", code)
+		return
+	}
+
+	u.Success(w, nil, 204)
 }

@@ -66,6 +66,26 @@ func GetUser(id uint) *User {
 	return user
 }
 
+func DeleteUser(id uint) (bool, string, int) {
+	user := &User{}
+	GetDB().Table("users").Where("id = ?", id).First(user)
+	if user.Email == "" {
+		return false, "Not Found", 404
+	}
+
+	user.Active = false
+	GetDB().Save(user)
+
+	err := GetDB().Delete(user)
+	if err == nil {
+		user.Active = true
+		GetDB().Save(user)
+		return false, "Error Deleting user", 400
+	}
+
+	return true, "", 200
+}
+
 func (user User) ToMap() map[string]interface{} {
 	var data map[string]interface{}
 	inrec, _ := json.Marshal(user)

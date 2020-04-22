@@ -18,7 +18,7 @@ func main() {
 	//router.HandleFunc("/users", controllers.CreateUser).Methods("POST")
 	router.HandleFunc("/users/{id:[0-9]+}", controllers.GetUser).Methods("GET")
 	//router.HandleFunc("/users/{id}", controllers.UpdateUser).Methods("PATCH")
-	//router.HandleFunc("/users/{id}", controllers.DeleteUser).Methods("DELETE")
+	router.HandleFunc("/users/{id:[0-9]+}", controllers.DeleteUser).Methods("DELETE")
 
 	//MIDDLEWARE
 	//router.Use(app.JwtAuthentication)
