@@ -10,20 +10,25 @@ import (
 	_ "strconv"
 )
 
-/*var CreateUser = func(w http.ResponseWriter, r *http.Request) {
-	user := r.Context().Value("user").(uint) //Grab the id of the user that send the request
-	contact := &models.Contact{}
-
-	err := json.NewDecoder(r.Body).Decode(contact)
+var CreateUser = func(w http.ResponseWriter, r *http.Request) {
+	data := make(map[string]interface{})
+	err := json.NewDecoder(r.Body).Decode(&data)
 	if err != nil {
-		u.Respond(w, u.Message(false, "Error while decoding request body"))
+		u.Fail(w, "Error while decoding request body", "", 400)
 		return
 	}
 
-	contact.UserId = user
-	resp := contact.Create()
-	u.Respond(w, resp)
-}*/
+	user, message, code := models.CreateUser(data)
+	if user == nil {
+		u.Fail(w, message, "", code)
+		return
+	}
+
+	resp := user.ToMap()
+	delete(resp, "password")
+	delete(resp, "password_reset")
+	u.Success(w, resp, 200)
+}
 
 var GetUser = func(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
@@ -64,7 +69,7 @@ var UpdateUser = func(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	u.Respond(w, nil, 204)
+	u.Success(w, nil, 204)
 }
 
 var UpdateUserPassword = func(w http.ResponseWriter, r *http.Request) {

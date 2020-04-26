@@ -15,7 +15,7 @@ func main() {
 	//router.HandleFunc("/login", controllers.Authenticate).Methods("POST")
 
 	//USERS
-	//router.HandleFunc("/users", controllers.CreateUser).Methods("POST")
+	router.HandleFunc("/users", controllers.CreateUser).Methods("POST")
 	router.HandleFunc("/users/{id:[0-9]+}", controllers.GetUser).Methods("GET")
 	router.HandleFunc("/users/{id:[0-9]+}", controllers.UpdateUser).Methods("PATCH")
 	router.HandleFunc("/users/{id:[0-9]+}/password", controllers.UpdateUserPassword).Methods("PATCH")

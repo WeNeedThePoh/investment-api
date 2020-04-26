@@ -3,6 +3,7 @@ package models
 import (
 	"encoding/json"
 	"github.com/dgrijalva/jwt-go"
+	"github.com/mitchellh/mapstructure"
 	"golang.org/x/crypto/bcrypt"
 	"time"
 )
@@ -55,6 +56,25 @@ type User struct {
 	resp["account"] = account
 	return resp
 }*/
+
+func CreateUser(data map[string]interface{}) (*User, string, int) {
+	user := &User{}
+	err := GetDB().Table("users").Where("email = ?", data["email"]).First(user).GetErrors()
+	if user.Email != "" && len(err) == 0 {
+		return nil, "Email alreay in use", 400
+	}
+
+	mapstructure.Decode(data, &user)
+	hashedPassword, _ := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
+	user.Password = string(hashedPassword)
+
+	err = GetDB().Create(user).GetErrors()
+	if len(err) != 0 {
+		return nil, "Something wrong happened while creating the user", 400
+	}
+
+	return user, "", 200
+}
 
 func GetUser(id uint) *User {
 	user := &User{}
