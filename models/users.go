@@ -3,6 +3,7 @@ package models
 import (
 	"encoding/json"
 	"github.com/dgrijalva/jwt-go"
+	"golang.org/x/crypto/bcrypt"
 	"time"
 )
 
@@ -62,8 +63,45 @@ func GetUser(id uint) *User {
 		return nil
 	}
 
-	user.Password = ""
 	return user
+}
+
+func UpdateUser(id uint, data map[string]interface{}) (bool, string, int) {
+	user := GetUser(id)
+	if user == nil {
+		return false, "Not found", 404
+	}
+
+	delete(data, "password")
+	delete(data, "password_reset")
+
+	errors := GetDB().Model(user).Update(data).GetErrors()
+	if len(errors) != 0 {
+		return false, "Something wrong happened while updating user", 400
+	}
+
+	return true, "", 204
+}
+
+func UpdateUserPassword(id uint, oldPassword string, newPassword string) (bool, string, int) {
+	user := GetUser(id)
+	if user == nil {
+		return false, "User not found", 404
+	}
+
+	err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(oldPassword))
+	if err != nil && err == bcrypt.ErrMismatchedHashAndPassword {
+		return false, "Invalid credentials", 401
+	}
+
+	hashedPassword, _ := bcrypt.GenerateFromPassword([]byte(newPassword), bcrypt.DefaultCost)
+	user.Password = string(hashedPassword)
+	errors := GetDB().Save(user).GetErrors()
+	if len(errors) != 0 {
+		return false, "Something wrong happened while updating user password", 400
+	}
+
+	return true, "", 204
 }
 
 func DeleteUser(id uint) (bool, string, int) {
