@@ -12,7 +12,7 @@ func main() {
 	router := mux.NewRouter()
 
 	//AUTH
-	//router.HandleFunc("/login", controllers.Authenticate).Methods("POST")
+	router.HandleFunc("/login", controllers.Authenticate).Methods("POST")
 
 	//USERS
 	router.HandleFunc("/users", controllers.CreateUser).Methods("POST")

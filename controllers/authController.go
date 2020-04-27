@@ -1,27 +1,25 @@
 package controllers
 
-/*var CreateAccount = func(w http.ResponseWriter, r *http.Request) {
+import (
+	"encoding/json"
+	"investment-api/models"
+	u "investment-api/utils"
+	"net/http"
+)
 
-	account := &models.User{}
-	err := json.NewDecoder(r.Body).Decode(account) //decode the request body into struct and failed if any error occur
+var Authenticate = func(w http.ResponseWriter, r *http.Request) {
+	user := &models.User{}
+	err := json.NewDecoder(r.Body).Decode(user)
 	if err != nil {
-		u.Respond(w, u.Message(false, "Invalid request"))
+		u.Fail(w, "Missing required data", "", 400)
 		return
 	}
 
-	resp := account.Create() //Create account
-	u.Respond(w, resp)
-}*/
-
-/*var Authenticate = func(w http.ResponseWriter, r *http.Request) {
-
-	account := &models.User{}
-	err := json.NewDecoder(r.Body).Decode(account) //decode the request body into struct and failed if any error occur
-	if err != nil {
-		u.Respond(w, u.Message(false, "Invalid request"))
+	resp, message, code := models.Login(user.Email, user.Password)
+	if resp == nil {
+		u.Fail(w, message, "", code)
 		return
 	}
 
-	resp := models.Login(account.Email, account.Password)
-	u.Respond(w, resp)
-}*/
+	u.Success(w, resp, 200)
+}

@@ -3,8 +3,11 @@ package models
 import (
 	"encoding/json"
 	"github.com/dgrijalva/jwt-go"
+	"github.com/jinzhu/gorm"
 	"github.com/mitchellh/mapstructure"
 	"golang.org/x/crypto/bcrypt"
+	"os"
+	"strconv"
 	"time"
 )
 
@@ -29,33 +32,35 @@ type User struct {
 	DeletedAt     *time.Time `json:"deleted_at"`
 }
 
-/*func Login(email, password string) (map[string]interface{}) {
-	account := &User{}
-	err := GetDB().Table("accounts").Where("email = ?", email).First(account).Error
+func Login(email, password string) (map[string]interface{}, string, int) {
+	user := &User{}
+	err := GetDB().Table("users").Where("email = ?", email).First(user).Error
 	if err != nil {
 		if err == gorm.ErrRecordNotFound {
-			return u.Message(false, "Email address not found")
+			return nil, "User not found", 404
 		}
-		return u.Message(false, "Connection error. Please retry")
+
+		return nil, "Connection error. Please retry", 400
 	}
 
-	err = bcrypt.CompareHashAndPassword([]byte(account.Password), []byte(password))
-	if err != nil && err == bcrypt.ErrMismatchedHashAndPassword { //Password does not match!
-		return u.Message(false, "Invalid login credentials. Please try again")
+	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password))
+	if err != nil && err == bcrypt.ErrMismatchedHashAndPassword {
+		return nil, "Invalid login credentials", 401
 	}
-	//Worked! Logged In
-	account.Password = ""
 
-	//Create JWT token
-	tk := &Token{UserId: account.ID}
+	tk := &Token{UserId: user.ID}
+
+	exp, err := strconv.ParseInt(os.Getenv("JWT_EXPIRE_TIME"), 10, 64)
+	if err != nil {
+		return nil, "Couldn't parse jwt expire in", 400
+	}
+
+	tk.ExpiresAt = exp
 	token := jwt.NewWithClaims(jwt.GetSigningMethod("HS256"), tk)
 	tokenString, _ := token.SignedString([]byte(os.Getenv("JWT_SECRET")))
-	account.Token = tokenString //Store the token in the response
 
-	resp := u.Message(true, "Logged In")
-	resp["account"] = account
-	return resp
-}*/
+	return map[string]interface{}{"token": tokenString, "exp_in": tk.ExpiresAt}, "", 200
+}
 
 func CreateUser(data map[string]interface{}) (*User, string, int) {
 	user := &User{}
