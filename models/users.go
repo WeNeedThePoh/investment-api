@@ -55,7 +55,7 @@ func Login(email, password string) (map[string]interface{}, string, int) {
 		return nil, "Couldn't parse jwt expire in", 400
 	}
 
-	tk.ExpiresAt = exp
+	tk.ExpiresAt = time.Now().Unix() + exp
 	token := jwt.NewWithClaims(jwt.GetSigningMethod("HS256"), tk)
 	tokenString, _ := token.SignedString([]byte(os.Getenv("JWT_SECRET")))
 

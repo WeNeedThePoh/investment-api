@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/gorilla/mux"
+	"investment-api/app"
 	"investment-api/controllers"
 	"net/http"
 	"os"
@@ -22,9 +23,9 @@ func main() {
 	router.HandleFunc("/users/{id:[0-9]+}", controllers.DeleteUser).Methods("DELETE")
 
 	//MIDDLEWARE
-	//router.Use(app.JwtAuthentication)
+	router.Use(app.JwtAuthentication)
 
-	//router.NotFoundHandler = app.NotFoundHandler
+	router.NotFoundHandler = app.NotFoundHandler()
 
 	port := os.Getenv("PORT")
 	if port == "" {
