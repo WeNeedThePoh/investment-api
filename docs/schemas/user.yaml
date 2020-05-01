@@ -5,9 +5,6 @@ properties:
     readOnly: true
   email:
     type: string
-  old_password:
-    type: string
-    writeOnly: true
   password:
     type: string
     writeOnly: true
@@ -34,7 +31,6 @@ properties:
     default: false
 required:
   - email
-  - old_password
   - password
   - first_name
   - country

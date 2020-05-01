@@ -70,7 +70,7 @@ paths:
                 $ref: 'schemas/user.yaml'
               example:
                 $ref: 'examples/user.json'
-    put:
+    patch:
       summary: Update a specific user
       tags:
         - users
@@ -81,7 +81,7 @@ paths:
             schema:
               $ref: 'schemas/user.yaml'
             example:
-              $ref: 'examples/user_put.json'
+              $ref: 'examples/user_patch.json'
       responses:
         '204':
           description: The user was updated successfully.
@@ -92,6 +92,26 @@ paths:
       responses:
         '204':
           description: The user was deleted successfully.
+  /users/{user-id}/password:
+    parameters:
+      - name: user-id
+        in: path
+        required: true
+    patch:
+      summary: Update a user's password
+      tags:
+        - users
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: 'schemas/user_password.yaml'
+            example:
+              $ref: 'examples/user_password_patch.json'
+      responses:
+        '204':
+          description: The user password was updated successfully.
   /users/{user-id}/portfolios:
     parameters:
       - name: user-id
@@ -152,7 +172,7 @@ paths:
                 $ref: 'schemas/portfolio.yaml'
               example:
                 $ref: 'examples/portfolio.json'
-    put:
+    patch:
       summary: Update a specific portfolio
       tags:
         - portfolios
@@ -163,7 +183,7 @@ paths:
             schema:
               $ref: 'schemas/portfolio.yaml'
             example:
-              $ref: 'examples/portfolio_put.json'
+              $ref: 'examples/portfolio_patch.json'
       responses:
         '204':
           description: The portfolio was updated successfully.
@@ -240,7 +260,7 @@ paths:
                 $ref: 'schemas/transaction.yaml'
               example:
                 $ref: 'examples/transaction.json'
-    put:
+    patch:
       summary: Update a specific transaction
       tags:
         - transactions
@@ -251,7 +271,7 @@ paths:
             schema:
               $ref: 'schemas/transaction.yaml'
             example:
-              $ref: 'examples/transaction_put.json'
+              $ref: 'examples/transaction_patch.json'
       responses:
         '204':
           description: The transaction was updated successfully.
