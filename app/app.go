@@ -4,7 +4,7 @@ import (
 	"context"
 	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/gorilla/mux"
-	"investment-api/models"
+	"investment-api/services"
 	u "investment-api/utils"
 	"net/http"
 	"os"
@@ -28,37 +28,37 @@ var JwtAuthentication = func(next http.Handler) http.Handler {
 
 		tokenHeader := r.Header.Get("Authorization")
 		if tokenHeader == "" {
-			u.Fail(w, "Missing auth token", "", 403)
+			u.Fail(w, "Missing auth token", "", http.StatusForbidden)
 			return
 		}
 
 		splitted := strings.Split(tokenHeader, " ")
 		if len(splitted) != 2 {
-			u.Fail(w, "Invalid/Malformed auth token", "", 403)
+			u.Fail(w, "Invalid/Malformed auth token", "", http.StatusForbidden)
 			return
 		}
 
 		tokenPart := splitted[1]
-		tk := &models.Token{}
+		tk := &services.Token{}
 
 		token, err := jwt.ParseWithClaims(tokenPart, tk, func(token *jwt.Token) (interface{}, error) {
 			return []byte(os.Getenv("JWT_SECRET")), nil
 		})
 
 		if err != nil || !token.Valid {
-			u.Fail(w, "Malformed authentication token", "", 403)
+			u.Fail(w, "Malformed authentication token", "", http.StatusForbidden)
 			return
 		}
 
 		vars := mux.Vars(r)
 		id, err := strconv.ParseInt(vars["id"], 10, 64)
 		if err != nil {
-			u.Fail(w, "Request parameter not found", "", 400)
+			u.Fail(w, "Request parameter not found", "", http.StatusBadRequest)
 			return
 		}
 
 		if  tk.UserId != uint(id) {
-			u.Fail(w, "Request user id didn't match token user id", "", 401)
+			u.Fail(w, "Request user id didn't match token user id", "", http.StatusUnauthorized)
 			return
 		}
 

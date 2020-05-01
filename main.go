@@ -32,7 +32,7 @@ func main() {
 		port = "8080"
 	}
 
-	err := http.ListenAndServe(":"+port, router) //Launch the app, visit localhost:8000/api
+	err := http.ListenAndServe(":"+port, router)
 	if err != nil {
 		fmt.Print(err)
 	}

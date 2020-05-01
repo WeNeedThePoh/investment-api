@@ -2,21 +2,22 @@ package models
 
 import (
 	"encoding/json"
-	"github.com/dgrijalva/jwt-go"
-	"github.com/jinzhu/gorm"
+	"errors"
 	"github.com/mitchellh/mapstructure"
 	"golang.org/x/crypto/bcrypt"
-	"os"
-	"strconv"
 	"time"
 )
 
-type Token struct {
-	UserId uint
-	jwt.StandardClaims
+type UserModel interface {
+	CreateUser(data map[string]interface{}) (*user, error)
+	GetUser(id uint) (*user, error)
+	GetByEmail(email string) *user
+	UpdateUser(data map[string]interface{}) error
+	UpdateUserPassword(newPassword string) error
+	DeleteUser() error
 }
 
-type User struct {
+type user struct {
 	ID            uint       `json:"id"`
 	Currency      *uint      `json:"currency_id" gorm:"column:currency_id"`
 	Country       uint       `json:"country_id" gorm:"column:country_id"`
@@ -32,110 +33,62 @@ type User struct {
 	DeletedAt     *time.Time `json:"deleted_at"`
 }
 
-func Login(email, password string) (map[string]interface{}, string, int) {
-	user := &User{}
-	err := GetDB().Table("users").Where("email = ?", email).First(user).Error
-	if err != nil {
-		if err == gorm.ErrRecordNotFound {
-			return nil, "User not found", 404
-		}
-
-		return nil, "Connection error. Please retry", 400
-	}
-
-	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password))
-	if err != nil && err == bcrypt.ErrMismatchedHashAndPassword {
-		return nil, "Invalid login credentials", 401
-	}
-
-	tk := &Token{UserId: user.ID}
-
-	exp, err := strconv.ParseInt(os.Getenv("JWT_EXPIRE_TIME"), 10, 64)
-	if err != nil {
-		return nil, "Couldn't parse jwt expire in", 400
-	}
-
-	tk.ExpiresAt = time.Now().Unix() + exp
-	token := jwt.NewWithClaims(jwt.GetSigningMethod("HS256"), tk)
-	tokenString, _ := token.SignedString([]byte(os.Getenv("JWT_SECRET")))
-
-	return map[string]interface{}{"token": tokenString, "exp_in": tk.ExpiresAt}, "", 200
+func NewUser() UserModel {
+	return &user{}
 }
 
-func CreateUser(data map[string]interface{}) (*User, string, int) {
-	user := &User{}
-	err := GetDB().Table("users").Where("email = ?", data["email"]).First(user).GetErrors()
-	if user.Email != "" && len(err) == 0 {
-		return nil, "Email alreay in use", 400
-	}
-
+func (user *user) CreateUser(data map[string]interface{}) (*user, error) {
 	mapstructure.Decode(data, &user)
 	hashedPassword, _ := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
 	user.Password = string(hashedPassword)
 
-	err = GetDB().Create(user).GetErrors()
+	err := GetDB().Create(user).GetErrors()
 	if len(err) != 0 {
-		return nil, "Something wrong happened while creating the user", 400
+		return nil, errors.New("something wrong happened while creating the user")
 	}
 
-	return user, "", 200
+	return user, nil
 }
 
-func GetUser(id uint) *User {
-	user := &User{}
-	GetDB().Table("users").Where("id = ?", id).First(user)
-	if user.Email == "" {
+func (user *user) GetUser(id uint) (*user, error) {
+	err := GetDB().Table("users").Where("id = ?", id).First(user).GetErrors()
+	if user.Email == "" && len(err) != 0 {
+		return user, errors.New("user not found")
+	}
+
+	return user, nil
+}
+
+func (user *user) GetByEmail(email string) *user {
+	err := GetDB().Table("users").Where("email = ?", email).First(user).GetErrors()
+	if user.Email == "" && len(err) != 0 {
 		return nil
 	}
 
 	return user
 }
 
-func UpdateUser(id uint, data map[string]interface{}) (bool, string, int) {
-	user := GetUser(id)
-	if user == nil {
-		return false, "Not found", 404
+func (user *user) UpdateUser(data map[string]interface{}) error {
+	errs := GetDB().Model(user).Update(data).GetErrors()
+	if len(errs) != 0 {
+		return errors.New("something went wrong while updating user")
 	}
 
-	delete(data, "password")
-	delete(data, "password_reset")
-
-	errors := GetDB().Model(user).Update(data).GetErrors()
-	if len(errors) != 0 {
-		return false, "Something wrong happened while updating user", 400
-	}
-
-	return true, "", 204
+	return nil
 }
 
-func UpdateUserPassword(id uint, oldPassword string, newPassword string) (bool, string, int) {
-	user := GetUser(id)
-	if user == nil {
-		return false, "User not found", 404
-	}
-
-	err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(oldPassword))
-	if err != nil && err == bcrypt.ErrMismatchedHashAndPassword {
-		return false, "Invalid credentials", 401
-	}
-
+func (user *user) UpdateUserPassword(newPassword string) error {
 	hashedPassword, _ := bcrypt.GenerateFromPassword([]byte(newPassword), bcrypt.DefaultCost)
 	user.Password = string(hashedPassword)
-	errors := GetDB().Save(user).GetErrors()
-	if len(errors) != 0 {
-		return false, "Something wrong happened while updating user password", 400
+	err := GetDB().Save(user).GetErrors()
+	if len(err) != 0 {
+		return errors.New("something wrong happened while updating user password")
 	}
 
-	return true, "", 204
+	return nil
 }
 
-func DeleteUser(id uint) (bool, string, int) {
-	user := &User{}
-	GetDB().Table("users").Where("id = ?", id).First(user)
-	if user.Email == "" {
-		return false, "Not Found", 404
-	}
-
+func (user *user) DeleteUser() error {
 	user.Active = false
 	GetDB().Save(user)
 
@@ -143,13 +96,13 @@ func DeleteUser(id uint) (bool, string, int) {
 	if err == nil {
 		user.Active = true
 		GetDB().Save(user)
-		return false, "Error Deleting user", 400
+		return errors.New("something went wrong while deleting user")
 	}
 
-	return true, "", 200
+	return nil
 }
 
-func (user User) ToMap() map[string]interface{} {
+func (user user) ToMap() map[string]interface{} {
 	var data map[string]interface{}
 	inrec, _ := json.Marshal(user)
 	json.Unmarshal(inrec, &data)

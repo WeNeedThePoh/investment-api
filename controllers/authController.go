@@ -3,23 +3,27 @@ package controllers
 import (
 	"encoding/json"
 	"investment-api/models"
+	"investment-api/services"
 	u "investment-api/utils"
 	"net/http"
 )
 
 var Authenticate = func(w http.ResponseWriter, r *http.Request) {
-	user := &models.User{}
-	err := json.NewDecoder(r.Body).Decode(user)
-	if err != nil {
-		u.Fail(w, "Missing required data", "", 400)
+	data := make(map[string] string)
+
+	err := json.NewDecoder(r.Body).Decode(&data)
+	if err != nil || data["email"] == "" || data["password"] == "" || len(data) == 0 {
+		u.Fail(w, "Missing required data", "The body payload can not be empty", 400)
 		return
 	}
 
-	resp, message, code := models.Login(user.Email, user.Password)
+	var model = models.NewUser()
+	service := services.NewAuthService(model)
+	resp, message, code := service.Login(data["email"], data["password"])
 	if resp == nil {
 		u.Fail(w, message, "", code)
 		return
 	}
 
-	u.Success(w, resp, 200)
+	u.Success(w, resp, http.StatusOK)
 }

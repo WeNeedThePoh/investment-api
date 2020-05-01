@@ -2,11 +2,10 @@ package controllers
 
 import (
 	"encoding/json"
-	"github.com/gorilla/mux"
 	"investment-api/models"
+	"investment-api/services"
 	u "investment-api/utils"
 	"net/http"
-	"strconv"
 	_ "strconv"
 )
 
@@ -18,95 +17,83 @@ var CreateUser = func(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	user, message, code := models.CreateUser(data)
+	var model = models.NewUser()
+	service := services.NewUserService(model)
+	user, message, code := service.CreateUser(data)
+
 	if user == nil {
 		u.Fail(w, message, "", code)
-		return
+	} else {
+		u.Success(w, user, http.StatusCreated)
 	}
-
-	resp := user.ToMap()
-	delete(resp, "password")
-	delete(resp, "password_reset")
-	u.Success(w, resp, 200)
 }
 
 var GetUser = func(w http.ResponseWriter, r *http.Request) {
-	vars := mux.Vars(r)
-	id, err := strconv.ParseUint(vars["id"], 10, 64)
-	if err != nil {
-		u.Fail(w, "Request parameter not found", "", 400)
-	}
+	id := u.RetrieveIdParameter(r)
+	var model = models.NewUser()
+	service := services.NewUserService(model)
 
-	user := models.GetUser(uint(id))
+	user, message, code := service.GetUser(id)
 	if user == nil {
-		u.Fail(w, "User not found", "", 404)
-		return
+		u.Fail(w, message, "", code)
+	} else {
+		u.Success(w, user, http.StatusOK)
 	}
-
-	resp := user.ToMap()
-	delete(resp, "password")
-	delete(resp, "password_reset")
-	u.Success(w, resp, 200)
 }
 
 var UpdateUser = func(w http.ResponseWriter, r *http.Request) {
-	vars := mux.Vars(r)
-	id, err := strconv.ParseUint(vars["id"], 10, 64)
-	if err != nil {
-		u.Fail(w, "Request parameter not found", "", 400)
-	}
-
+	id := u.RetrieveIdParameter(r)
 	data := make(map[string]interface{})
-	err = json.NewDecoder(r.Body).Decode(&data)
+
+	err := json.NewDecoder(r.Body).Decode(&data)
 	if err != nil {
 		u.Fail(w, "Missing required data", "The body payload can not be empty", 400)
 		return
 	}
 
-	updated, message, code := models.UpdateUser(uint(id), data)
+	var model = models.NewUser()
+	service := services.NewUserService(model)
+	updated, message, code := service.UpdateUser(id, data)
+
 	if updated == false {
 		u.Fail(w, message, "", code)
-		return
+	} else {
+		u.Success(w, nil, http.StatusNoContent)
 	}
-
-	u.Success(w, nil, 204)
 }
 
 var UpdateUserPassword = func(w http.ResponseWriter, r *http.Request) {
-	vars := mux.Vars(r)
-	id, err := strconv.ParseUint(vars["id"], 10, 64)
-	if err != nil {
-		u.Fail(w, "Request parameter not found", "", 400)
-	}
-
+	id := u.RetrieveIdParameter(r)
 	data := make(map[string] string)
-	err = json.NewDecoder(r.Body).Decode(&data)
+
+	err := json.NewDecoder(r.Body).Decode(&data)
 	if err != nil || data["password"] == "" || data["old_password"] == "" || len(data) == 0 {
 		u.Fail(w, "Missing required data", "The body payload can not be empty", 400)
 		return
 	}
 
-	updated, message, code := models.UpdateUserPassword(uint(id), data["old_password"], data["password"])
+	var model = models.NewUser()
+	service := services.NewUserService(model)
+	updated, message, code := service.UpdateUserPassword(id, data["old_password"], data["password"])
+
 	if updated == false {
 		u.Fail(w, message, "", code)
-		return
+	} else {
+		u.Respond(w, nil, http.StatusNoContent)
 	}
-
-	u.Respond(w, nil, 204)
 }
 
 var DeleteUser = func(w http.ResponseWriter, r *http.Request) {
-	vars := mux.Vars(r)
-	id, err := strconv.ParseUint(vars["id"], 10, 64)
-	if err != nil {
-		u.Fail(w, "Request parameter not found", "", 400)
-	}
+	id := u.RetrieveIdParameter(r)
+	var model = models.NewUser()
+	service := services.NewUserService(model)
 
-	deleted, message, code := models.DeleteUser(uint(id))
+	deleted, message, code := service.DeleteUser(id)
+
 	if deleted == false {
 		u.Fail(w, message, "", code)
 		return
+	} else {
+		u.Success(w, nil, http.StatusNoContent)
 	}
-
-	u.Success(w, nil, 204)
 }

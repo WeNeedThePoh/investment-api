@@ -2,7 +2,9 @@ package utils
 
 import (
 	"encoding/json"
+	"github.com/gorilla/mux"
 	"net/http"
+	"strconv"
 )
 
 func Success(w http.ResponseWriter, data map[string]interface{}, statusCode int) {
@@ -27,4 +29,14 @@ func Respond(w http.ResponseWriter, data map[string]interface{}, statusCode int)
 	w.Header().Add("Content-Type", "application/json")
 	w.WriteHeader(statusCode)
 	json.NewEncoder(w).Encode(data)
+}
+
+func RetrieveIdParameter(r *http.Request) uint {
+	vars := mux.Vars(r)
+	id, err := strconv.ParseUint(vars["id"], 10, 64)
+	if err != nil {
+		return 0
+	}
+
+	return uint(id)
 }
