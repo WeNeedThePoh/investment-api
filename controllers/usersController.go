@@ -13,7 +13,7 @@ var CreateUser = func(w http.ResponseWriter, r *http.Request) {
 	data := make(map[string]interface{})
 	err := json.NewDecoder(r.Body).Decode(&data)
 	if err != nil {
-		u.Fail(w, "Error while decoding request body", "", 400)
+		u.Fail(w, "Error while decoding request body", "", http.StatusBadRequest)
 		return
 	}
 
@@ -47,7 +47,7 @@ var UpdateUser = func(w http.ResponseWriter, r *http.Request) {
 
 	err := json.NewDecoder(r.Body).Decode(&data)
 	if err != nil {
-		u.Fail(w, "Missing required data", "The body payload can not be empty", 400)
+		u.Fail(w, "Missing required data", "The body payload can not be empty", http.StatusBadRequest)
 		return
 	}
 
@@ -68,7 +68,7 @@ var UpdateUserPassword = func(w http.ResponseWriter, r *http.Request) {
 
 	err := json.NewDecoder(r.Body).Decode(&data)
 	if err != nil || data["password"] == "" || data["old_password"] == "" || len(data) == 0 {
-		u.Fail(w, "Missing required data", "The body payload can not be empty", 400)
+		u.Fail(w, "Missing required data", "The body payload can not be empty", http.StatusBadRequest)
 		return
 	}
 

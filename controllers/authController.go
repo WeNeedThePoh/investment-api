@@ -13,7 +13,7 @@ var Authenticate = func(w http.ResponseWriter, r *http.Request) {
 
 	err := json.NewDecoder(r.Body).Decode(&data)
 	if err != nil || data["email"] == "" || data["password"] == "" || len(data) == 0 {
-		u.Fail(w, "Missing required data", "The body payload can not be empty", 400)
+		u.Fail(w, "Missing required data", "The body payload can not be empty", http.StatusBadRequest)
 		return
 	}
 

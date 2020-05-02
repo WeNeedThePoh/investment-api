@@ -14,7 +14,7 @@ func Success(w http.ResponseWriter, data map[string]interface{}, statusCode int)
 	}
 
 	if statusCode == 0 {
-		statusCode = 200
+		statusCode = http.StatusOK
 	}
 	Respond(w, response, statusCode)
 }
