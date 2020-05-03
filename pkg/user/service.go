@@ -5,15 +5,18 @@ import (
 	"net/http"
 )
 
-type UsersService struct {
+//Service dependencies
+type Service struct {
 	User Model
 }
 
-func NewUserService(model Model) *UsersService {
-	return &UsersService{User: model}
+//NewUserService service construct
+func NewUserService(model Model) *Service {
+	return &Service{User: model}
 }
 
-func (service *UsersService) Create(data map[string]interface{}) (map[string]interface{}, string, int) {
+//Create new user
+func (service *Service) Create(data map[string]interface{}) (map[string]interface{}, string, int) {
 	user := service.User.GetByEmail(data["email"].(string))
 	if user != nil {
 		return nil, "email already in use", http.StatusNotFound
@@ -30,7 +33,8 @@ func (service *UsersService) Create(data map[string]interface{}) (map[string]int
 	return resp, "", 0
 }
 
-func (service *UsersService) Get(id uint) (map[string]interface{}, string, int) {
+//Get user
+func (service *Service) Get(id uint) (map[string]interface{}, string, int) {
 	user, err := service.User.Get(id)
 	if err != nil {
 		return nil, "user not found", http.StatusNotFound
@@ -42,7 +46,8 @@ func (service *UsersService) Get(id uint) (map[string]interface{}, string, int) 
 	return resp, "", 0
 }
 
-func (service *UsersService) Update(id uint, data map[string]interface{}) (bool, string, int) {
+//Update user
+func (service *Service) Update(id uint, data map[string]interface{}) (bool, string, int) {
 	user, err := service.User.Get(id)
 	if err != nil {
 		return false, "user not found", http.StatusNotFound
@@ -59,7 +64,8 @@ func (service *UsersService) Update(id uint, data map[string]interface{}) (bool,
 	return true, "", 0
 }
 
-func (service *UsersService) UpdatePassword(id uint, oldPassword string, password string) (bool, string, int) {
+//UpdatePassword update user password
+func (service *Service) UpdatePassword(id uint, oldPassword string, password string) (bool, string, int) {
 	user, err := service.User.Get(id)
 	if err != nil {
 		return false, "user not found", http.StatusNotFound
@@ -78,7 +84,8 @@ func (service *UsersService) UpdatePassword(id uint, oldPassword string, passwor
 	return true, "", 0
 }
 
-func (service *UsersService) Delete(id uint) (bool, string, int) {
+//Delete user
+func (service *Service) Delete(id uint) (bool, string, int) {
 	user, err := service.User.Get(id)
 	if err != nil {
 		return false, "user not found", http.StatusNotFound

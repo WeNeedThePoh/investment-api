@@ -7,6 +7,7 @@ import (
 	"strconv"
 )
 
+//Success payload, all responses thar are 2xx
 func Success(w http.ResponseWriter, data map[string]interface{}, statusCode int) {
 	response := make(map[string]interface{})
 	if data != nil {
@@ -19,19 +20,22 @@ func Success(w http.ResponseWriter, data map[string]interface{}, statusCode int)
 	Respond(w, response, statusCode)
 }
 
+//Fail payload, all responses that are 4xx
 func Fail(w http.ResponseWriter, message string, detail string, statusCode int) {
 	data := map[string]interface{}{"message": message, "detail": detail}
 
 	Respond(w, data, statusCode)
 }
 
+//Respond prepare payload
 func Respond(w http.ResponseWriter, data map[string]interface{}, statusCode int) {
 	w.Header().Add("Content-Type", "application/json")
 	w.WriteHeader(statusCode)
 	json.NewEncoder(w).Encode(data)
 }
 
-func RetrieveIdParameter(r *http.Request) uint {
+//RetrieveIDParameter retrieve parameter id from request route
+func RetrieveIDParameter(r *http.Request) uint {
 	vars := mux.Vars(r)
 	id, err := strconv.ParseUint(vars["id"], 10, 64)
 	if err != nil {

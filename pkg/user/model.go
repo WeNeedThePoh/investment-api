@@ -9,16 +9,18 @@ import (
 	"time"
 )
 
+//Model interface
 type Model interface {
-	Create(data map[string]interface{}) (*user, error)
-	Get(id uint) (*user, error)
-	GetByEmail(email string) *user
+	Create(data map[string]interface{}) (*User, error)
+	Get(id uint) (*User, error)
+	GetByEmail(email string) *User
 	Update(data map[string]interface{}) error
 	UpdatePassword(newPassword string) error
 	Delete() error
 }
 
-type user struct {
+//User model
+type User struct {
 	ID            uint       `json:"id"`
 	Currency      *uint      `json:"currency_id" gorm:"column:currency_id"`
 	Country       uint       `json:"country_id" gorm:"column:country_id"`
@@ -34,11 +36,13 @@ type user struct {
 	DeletedAt     *time.Time `json:"deleted_at"`
 }
 
+//NewUser instantiate new user model
 func NewUser() Model {
-	return &user{}
+	return &User{}
 }
 
-func (user *user) Create(data map[string]interface{}) (*user, error) {
+//Create a new user
+func (user *User) Create(data map[string]interface{}) (*User, error) {
 	mapstructure.Decode(data, &user)
 	hashedPassword, _ := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
 	user.Password = string(hashedPassword)
@@ -51,7 +55,8 @@ func (user *user) Create(data map[string]interface{}) (*user, error) {
 	return user, nil
 }
 
-func (user *user) Get(id uint) (*user, error) {
+//Get user by ID
+func (user *User) Get(id uint) (*User, error) {
 	err := utils.GetDB().Table("users").Where("id = ?", id).First(user).GetErrors()
 	if user.Email == "" && len(err) != 0 {
 		return user, errors.New("user not found")
@@ -60,7 +65,8 @@ func (user *user) Get(id uint) (*user, error) {
 	return user, nil
 }
 
-func (user *user) GetByEmail(email string) *user {
+//GetByEmail get user by email
+func (user *User) GetByEmail(email string) *User {
 	err := utils.GetDB().Table("users").Where("email = ?", email).First(user).GetErrors()
 	if user.Email == "" && len(err) != 0 {
 		return nil
@@ -69,7 +75,8 @@ func (user *user) GetByEmail(email string) *user {
 	return user
 }
 
-func (user *user) Update(data map[string]interface{}) error {
+//Update user data
+func (user *User) Update(data map[string]interface{}) error {
 	errs := utils.GetDB().Model(user).Update(data).GetErrors()
 	if len(errs) != 0 {
 		return errors.New("something went wrong while updating user")
@@ -78,7 +85,8 @@ func (user *user) Update(data map[string]interface{}) error {
 	return nil
 }
 
-func (user *user) UpdatePassword(newPassword string) error {
+//UpdatePassword updates user password
+func (user *User) UpdatePassword(newPassword string) error {
 	hashedPassword, _ := bcrypt.GenerateFromPassword([]byte(newPassword), bcrypt.DefaultCost)
 	user.Password = string(hashedPassword)
 	err := utils.GetDB().Save(user).GetErrors()
@@ -89,7 +97,8 @@ func (user *user) UpdatePassword(newPassword string) error {
 	return nil
 }
 
-func (user *user) Delete() error {
+//Delete user
+func (user *User) Delete() error {
 	user.Active = false
 	utils.GetDB().Save(user)
 
@@ -103,7 +112,8 @@ func (user *user) Delete() error {
 	return nil
 }
 
-func (user user) ToMap() map[string]interface{} {
+//ToMap transformer struct to map
+func (user User) ToMap() map[string]interface{} {
 	var data map[string]interface{}
 	inrec, _ := json.Marshal(user)
 	json.Unmarshal(inrec, &data)

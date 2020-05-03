@@ -3,7 +3,7 @@ package utils
 import (
 	"fmt"
 	"github.com/jinzhu/gorm"
-	_ "github.com/jinzhu/gorm/dialects/postgres"
+	_ "github.com/jinzhu/gorm/dialects/postgres" //used to connect to db
 	"github.com/joho/godotenv"
 	"os"
 )
@@ -21,10 +21,9 @@ func init() {
 	dbName := os.Getenv("DB_NAME")
 	dbHost := os.Getenv("DB_HOST")
 
-	//Build connection string
-	dbUri := fmt.Sprintf("host=%s user=%s dbname=%s sslmode=disable password=%s", dbHost, username, dbName, password)
+	dbURI := fmt.Sprintf("host=%s user=%s dbname=%s sslmode=disable password=%s", dbHost, username, dbName, password)
 
-	conn, err := gorm.Open("postgres", dbUri)
+	conn, err := gorm.Open("postgres", dbURI)
 	if err != nil {
 		fmt.Print(err)
 	}
@@ -32,7 +31,7 @@ func init() {
 	db = conn
 }
 
-//returns a handle to the DB object
+//GetDB returns a handle to the DB object
 func GetDB() *gorm.DB {
 	return db
 }

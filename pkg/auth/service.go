@@ -10,20 +10,24 @@ import (
 	"time"
 )
 
+//Service dependencies
 type Service struct {
 	UserModel u.Model
 }
 
+//Token model
 type Token struct {
-	UserId uint
+	UserID uint
 	jwt.StandardClaims
 }
 
+//NewAuthService service construct
 func NewAuthService(model u.Model) *Service {
 	return &Service{UserModel: model}
 }
 
-func (service *Service) Login (email string, password string) (map[string]interface{}, string, int){
+//Login login user
+func (service *Service) Login(email string, password string) (map[string]interface{}, string, int) {
 	user := service.UserModel.GetByEmail(email)
 	if user == nil {
 		return nil, "user not found", http.StatusNotFound
@@ -34,7 +38,7 @@ func (service *Service) Login (email string, password string) (map[string]interf
 		return nil, "Invalid login credentials", http.StatusUnauthorized
 	}
 
-	tk := &Token{UserId: user.ID}
+	tk := &Token{UserID: user.ID}
 
 	exp, err := strconv.ParseInt(os.Getenv("JWT_EXPIRE_TIME"), 10, 64)
 	if err != nil {

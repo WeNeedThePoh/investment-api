@@ -7,8 +7,9 @@ import (
 	"net/http"
 )
 
+//Authenticate Login user
 var Authenticate = func(w http.ResponseWriter, r *http.Request) {
-	data := make(map[string] string)
+	data := make(map[string]string)
 
 	err := json.NewDecoder(r.Body).Decode(&data)
 	if err != nil || data["email"] == "" || data["password"] == "" || len(data) == 0 {

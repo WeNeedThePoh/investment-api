@@ -4,9 +4,9 @@ import (
 	"encoding/json"
 	u "investment-api/utils"
 	"net/http"
-	_ "strconv"
 )
 
+//CreateUser Create new user
 var CreateUser = func(w http.ResponseWriter, r *http.Request) {
 	data := make(map[string]interface{})
 	err := json.NewDecoder(r.Body).Decode(&data)
@@ -26,8 +26,9 @@ var CreateUser = func(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+//GetUser get user
 var GetUser = func(w http.ResponseWriter, r *http.Request) {
-	id := u.RetrieveIdParameter(r)
+	id := u.RetrieveIDParameter(r)
 	var model = NewUser()
 	service := NewUserService(model)
 
@@ -39,8 +40,9 @@ var GetUser = func(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+//UpdateUser update user
 var UpdateUser = func(w http.ResponseWriter, r *http.Request) {
-	id := u.RetrieveIdParameter(r)
+	id := u.RetrieveIDParameter(r)
 	data := make(map[string]interface{})
 
 	err := json.NewDecoder(r.Body).Decode(&data)
@@ -60,9 +62,10 @@ var UpdateUser = func(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+//UpdateUserPassword update user password
 var UpdateUserPassword = func(w http.ResponseWriter, r *http.Request) {
-	id := u.RetrieveIdParameter(r)
-	data := make(map[string] string)
+	id := u.RetrieveIDParameter(r)
+	data := make(map[string]string)
 
 	err := json.NewDecoder(r.Body).Decode(&data)
 	if err != nil || data["password"] == "" || data["old_password"] == "" || len(data) == 0 {
@@ -81,8 +84,9 @@ var UpdateUserPassword = func(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+//DeleteUser delete user
 var DeleteUser = func(w http.ResponseWriter, r *http.Request) {
-	id := u.RetrieveIdParameter(r)
+	id := u.RetrieveIDParameter(r)
 	var model = NewUser()
 	service := NewUserService(model)
 
@@ -90,7 +94,6 @@ var DeleteUser = func(w http.ResponseWriter, r *http.Request) {
 
 	if deleted == false {
 		u.Fail(w, message, "", code)
-		return
 	} else {
 		u.Success(w, nil, http.StatusNoContent)
 	}

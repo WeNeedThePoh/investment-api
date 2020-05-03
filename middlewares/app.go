@@ -12,6 +12,14 @@ import (
 	"strings"
 )
 
+type key string
+
+//KeyUser user key for context
+const (
+	KeyUser key = "user"
+)
+
+//JwtAuthentication JWT middleware
 var JwtAuthentication = func(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 
@@ -57,12 +65,12 @@ var JwtAuthentication = func(next http.Handler) http.Handler {
 			return
 		}
 
-		if  tk.UserId != uint(id) {
+		if tk.UserID != uint(id) {
 			u.Fail(w, "Request user id didn't match token user id", "", http.StatusUnauthorized)
 			return
 		}
 
-		ctx := context.WithValue(r.Context(), "user", tk.UserId)
+		ctx := context.WithValue(r.Context(), KeyUser, tk.UserID)
 		r = r.WithContext(ctx)
 		next.ServeHTTP(w, r)
 	})

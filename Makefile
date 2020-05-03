@@ -77,8 +77,12 @@ clean:
 
 lint:
 	@ echo "$(OK_COLOR)==> Running linter... $(NO_COLOR)"
-	@ go fmt
-	@ golint ./
+	@ go fmt ./...
+	@ golint `go list ./... | grep -v /vendor/`
+
+test:
+	@ echo "$(OK_COLOR)==> Running tests... $(NO_COLOR)"
+	@ go test ./... -v
 
 migrate_up:
 	@echo "$(OK_COLOR)==> Migrating DB... $(NO_COLOR)"
