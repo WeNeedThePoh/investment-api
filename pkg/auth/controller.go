@@ -1,9 +1,8 @@
-package controllers
+package auth
 
 import (
 	"encoding/json"
-	"investment-api/models"
-	"investment-api/services"
+	"investment-api/pkg/user"
 	u "investment-api/utils"
 	"net/http"
 )
@@ -17,8 +16,8 @@ var Authenticate = func(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var model = models.NewUser()
-	service := services.NewAuthService(model)
+	var model = user.NewUser()
+	service := NewAuthService(model)
 	resp, message, code := service.Login(data["email"], data["password"])
 	if resp == nil {
 		u.Fail(w, message, "", code)

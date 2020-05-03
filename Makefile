@@ -44,7 +44,7 @@ stop: stop-server
 
 run:
 	@echo "$(OK_COLOR)==> $(PROJECT_NAME) is available at $(APP_URL) (DEV) $(NO_COLOR)"
-	@go run main.go
+	@go run cmd/investment-api/main.go
 
 start-server: stop-server
 	@echo "$(OK_COLOR)==> $(PROJECT_NAME) is available at $(APP_URL) $(NO_COLOR)"

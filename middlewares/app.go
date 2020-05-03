@@ -1,10 +1,10 @@
-package app
+package middlewares
 
 import (
 	"context"
 	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/gorilla/mux"
-	"investment-api/services"
+	"investment-api/pkg/auth"
 	u "investment-api/utils"
 	"net/http"
 	"os"
@@ -39,7 +39,7 @@ var JwtAuthentication = func(next http.Handler) http.Handler {
 		}
 
 		tokenPart := splitted[1]
-		tk := &services.Token{}
+		tk := &auth.Token{}
 
 		token, err := jwt.ParseWithClaims(tokenPart, tk, func(token *jwt.Token) (interface{}, error) {
 			return []byte(os.Getenv("JWT_SECRET")), nil

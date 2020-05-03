@@ -1,26 +1,25 @@
-package services
+package user
 
 import (
 	"golang.org/x/crypto/bcrypt"
-	"investment-api/models"
 	"net/http"
 )
 
 type UsersService struct {
-	UserModel models.UserModel
+	User Model
 }
 
-func NewUserService(model models.UserModel) *UsersService {
-	return &UsersService{UserModel: model}
+func NewUserService(model Model) *UsersService {
+	return &UsersService{User: model}
 }
 
-func (service *UsersService) CreateUser(data map[string]interface{}) (map[string]interface{}, string, int) {
-	user := service.UserModel.GetByEmail(data["email"].(string))
+func (service *UsersService) Create(data map[string]interface{}) (map[string]interface{}, string, int) {
+	user := service.User.GetByEmail(data["email"].(string))
 	if user != nil {
 		return nil, "email already in use", http.StatusNotFound
 	}
 
-	newUser, err := service.UserModel.CreateUser(data)
+	newUser, err := service.User.Create(data)
 	if err != nil {
 		return nil, "asd", http.StatusBadRequest
 	}
@@ -31,8 +30,8 @@ func (service *UsersService) CreateUser(data map[string]interface{}) (map[string
 	return resp, "", 0
 }
 
-func (service *UsersService) GetUser(id uint) (map[string]interface{}, string, int) {
-	user, err := service.UserModel.GetUser(id)
+func (service *UsersService) Get(id uint) (map[string]interface{}, string, int) {
+	user, err := service.User.Get(id)
 	if err != nil {
 		return nil, "user not found", http.StatusNotFound
 	}
@@ -43,8 +42,8 @@ func (service *UsersService) GetUser(id uint) (map[string]interface{}, string, i
 	return resp, "", 0
 }
 
-func (service *UsersService) UpdateUser(id uint, data map[string]interface{}) (bool, string, int) {
-	user, err := service.UserModel.GetUser(id)
+func (service *UsersService) Update(id uint, data map[string]interface{}) (bool, string, int) {
+	user, err := service.User.Get(id)
 	if err != nil {
 		return false, "user not found", http.StatusNotFound
 	}
@@ -52,7 +51,7 @@ func (service *UsersService) UpdateUser(id uint, data map[string]interface{}) (b
 	delete(data, "password")
 	delete(data, "password_reset")
 
-	err = user.UpdateUser(data)
+	err = user.Update(data)
 	if err != nil {
 		return false, "asdasd", http.StatusBadRequest
 	}
@@ -60,8 +59,8 @@ func (service *UsersService) UpdateUser(id uint, data map[string]interface{}) (b
 	return true, "", 0
 }
 
-func (service *UsersService) UpdateUserPassword(id uint, oldPassword string, password string) (bool, string, int) {
-	user, err := service.UserModel.GetUser(id)
+func (service *UsersService) UpdatePassword(id uint, oldPassword string, password string) (bool, string, int) {
+	user, err := service.User.Get(id)
 	if err != nil {
 		return false, "user not found", http.StatusNotFound
 	}
@@ -71,7 +70,7 @@ func (service *UsersService) UpdateUserPassword(id uint, oldPassword string, pas
 		return false, "Invalid credentials", http.StatusUnauthorized
 	}
 
-	err = user.UpdateUserPassword(password)
+	err = user.UpdatePassword(password)
 	if err != nil {
 		return false, "asdasd", http.StatusBadRequest
 	}
@@ -79,13 +78,13 @@ func (service *UsersService) UpdateUserPassword(id uint, oldPassword string, pas
 	return true, "", 0
 }
 
-func (service *UsersService) DeleteUser(id uint) (bool, string, int) {
-	user, err := service.UserModel.GetUser(id)
+func (service *UsersService) Delete(id uint) (bool, string, int) {
+	user, err := service.User.Get(id)
 	if err != nil {
 		return false, "user not found", http.StatusNotFound
 	}
 
-	err = user.DeleteUser()
+	err = user.Delete()
 	if err != nil {
 		return false, "asdasd", http.StatusBadRequest
 	}

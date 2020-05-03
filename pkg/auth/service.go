@@ -1,17 +1,17 @@
-package services
+package auth
 
 import (
 	"github.com/dgrijalva/jwt-go"
 	"golang.org/x/crypto/bcrypt"
-	"investment-api/models"
+	u "investment-api/pkg/user"
 	"net/http"
 	"os"
 	"strconv"
 	"time"
 )
 
-type AuthService struct {
-	UserModel models.UserModel
+type Service struct {
+	UserModel u.Model
 }
 
 type Token struct {
@@ -19,11 +19,11 @@ type Token struct {
 	jwt.StandardClaims
 }
 
-func NewAuthService(model models.UserModel) *AuthService {
-	return &AuthService{UserModel: model}
+func NewAuthService(model u.Model) *Service {
+	return &Service{UserModel: model}
 }
 
-func (service *AuthService) Login (email string, password string) (map[string]interface{}, string, int){
+func (service *Service) Login (email string, password string) (map[string]interface{}, string, int){
 	user := service.UserModel.GetByEmail(email)
 	if user == nil {
 		return nil, "user not found", http.StatusNotFound

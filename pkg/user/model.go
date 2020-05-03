@@ -1,20 +1,21 @@
-package models
+package user
 
 import (
 	"encoding/json"
 	"errors"
 	"github.com/mitchellh/mapstructure"
 	"golang.org/x/crypto/bcrypt"
+	"investment-api/utils"
 	"time"
 )
 
-type UserModel interface {
-	CreateUser(data map[string]interface{}) (*user, error)
-	GetUser(id uint) (*user, error)
+type Model interface {
+	Create(data map[string]interface{}) (*user, error)
+	Get(id uint) (*user, error)
 	GetByEmail(email string) *user
-	UpdateUser(data map[string]interface{}) error
-	UpdateUserPassword(newPassword string) error
-	DeleteUser() error
+	Update(data map[string]interface{}) error
+	UpdatePassword(newPassword string) error
+	Delete() error
 }
 
 type user struct {
@@ -33,16 +34,16 @@ type user struct {
 	DeletedAt     *time.Time `json:"deleted_at"`
 }
 
-func NewUser() UserModel {
+func NewUser() Model {
 	return &user{}
 }
 
-func (user *user) CreateUser(data map[string]interface{}) (*user, error) {
+func (user *user) Create(data map[string]interface{}) (*user, error) {
 	mapstructure.Decode(data, &user)
 	hashedPassword, _ := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
 	user.Password = string(hashedPassword)
 
-	err := GetDB().Create(user).GetErrors()
+	err := utils.GetDB().Create(user).GetErrors()
 	if len(err) != 0 {
 		return nil, errors.New("something wrong happened while creating the user")
 	}
@@ -50,8 +51,8 @@ func (user *user) CreateUser(data map[string]interface{}) (*user, error) {
 	return user, nil
 }
 
-func (user *user) GetUser(id uint) (*user, error) {
-	err := GetDB().Table("users").Where("id = ?", id).First(user).GetErrors()
+func (user *user) Get(id uint) (*user, error) {
+	err := utils.GetDB().Table("users").Where("id = ?", id).First(user).GetErrors()
 	if user.Email == "" && len(err) != 0 {
 		return user, errors.New("user not found")
 	}
@@ -60,7 +61,7 @@ func (user *user) GetUser(id uint) (*user, error) {
 }
 
 func (user *user) GetByEmail(email string) *user {
-	err := GetDB().Table("users").Where("email = ?", email).First(user).GetErrors()
+	err := utils.GetDB().Table("users").Where("email = ?", email).First(user).GetErrors()
 	if user.Email == "" && len(err) != 0 {
 		return nil
 	}
@@ -68,8 +69,8 @@ func (user *user) GetByEmail(email string) *user {
 	return user
 }
 
-func (user *user) UpdateUser(data map[string]interface{}) error {
-	errs := GetDB().Model(user).Update(data).GetErrors()
+func (user *user) Update(data map[string]interface{}) error {
+	errs := utils.GetDB().Model(user).Update(data).GetErrors()
 	if len(errs) != 0 {
 		return errors.New("something went wrong while updating user")
 	}
@@ -77,10 +78,10 @@ func (user *user) UpdateUser(data map[string]interface{}) error {
 	return nil
 }
 
-func (user *user) UpdateUserPassword(newPassword string) error {
+func (user *user) UpdatePassword(newPassword string) error {
 	hashedPassword, _ := bcrypt.GenerateFromPassword([]byte(newPassword), bcrypt.DefaultCost)
 	user.Password = string(hashedPassword)
-	err := GetDB().Save(user).GetErrors()
+	err := utils.GetDB().Save(user).GetErrors()
 	if len(err) != 0 {
 		return errors.New("something wrong happened while updating user password")
 	}
@@ -88,14 +89,14 @@ func (user *user) UpdateUserPassword(newPassword string) error {
 	return nil
 }
 
-func (user *user) DeleteUser() error {
+func (user *user) Delete() error {
 	user.Active = false
-	GetDB().Save(user)
+	utils.GetDB().Save(user)
 
-	err := GetDB().Delete(user)
+	err := utils.GetDB().Delete(user)
 	if err == nil {
 		user.Active = true
-		GetDB().Save(user)
+		utils.GetDB().Save(user)
 		return errors.New("something went wrong while deleting user")
 	}
 

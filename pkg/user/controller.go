@@ -1,9 +1,7 @@
-package controllers
+package user
 
 import (
 	"encoding/json"
-	"investment-api/models"
-	"investment-api/services"
 	u "investment-api/utils"
 	"net/http"
 	_ "strconv"
@@ -17,9 +15,9 @@ var CreateUser = func(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var model = models.NewUser()
-	service := services.NewUserService(model)
-	user, message, code := service.CreateUser(data)
+	var model = NewUser()
+	service := NewUserService(model)
+	user, message, code := service.Create(data)
 
 	if user == nil {
 		u.Fail(w, message, "", code)
@@ -30,10 +28,10 @@ var CreateUser = func(w http.ResponseWriter, r *http.Request) {
 
 var GetUser = func(w http.ResponseWriter, r *http.Request) {
 	id := u.RetrieveIdParameter(r)
-	var model = models.NewUser()
-	service := services.NewUserService(model)
+	var model = NewUser()
+	service := NewUserService(model)
 
-	user, message, code := service.GetUser(id)
+	user, message, code := service.Get(id)
 	if user == nil {
 		u.Fail(w, message, "", code)
 	} else {
@@ -51,9 +49,9 @@ var UpdateUser = func(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var model = models.NewUser()
-	service := services.NewUserService(model)
-	updated, message, code := service.UpdateUser(id, data)
+	var model = NewUser()
+	service := NewUserService(model)
+	updated, message, code := service.Update(id, data)
 
 	if updated == false {
 		u.Fail(w, message, "", code)
@@ -72,9 +70,9 @@ var UpdateUserPassword = func(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var model = models.NewUser()
-	service := services.NewUserService(model)
-	updated, message, code := service.UpdateUserPassword(id, data["old_password"], data["password"])
+	var model = NewUser()
+	service := NewUserService(model)
+	updated, message, code := service.UpdatePassword(id, data["old_password"], data["password"])
 
 	if updated == false {
 		u.Fail(w, message, "", code)
@@ -85,10 +83,10 @@ var UpdateUserPassword = func(w http.ResponseWriter, r *http.Request) {
 
 var DeleteUser = func(w http.ResponseWriter, r *http.Request) {
 	id := u.RetrieveIdParameter(r)
-	var model = models.NewUser()
-	service := services.NewUserService(model)
+	var model = NewUser()
+	service := NewUserService(model)
 
-	deleted, message, code := service.DeleteUser(id)
+	deleted, message, code := service.Delete(id)
 
 	if deleted == false {
 		u.Fail(w, message, "", code)

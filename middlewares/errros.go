@@ -1,4 +1,4 @@
-package app
+package middlewares
 
 import (
 	u "investment-api/utils"
