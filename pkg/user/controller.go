@@ -6,8 +6,8 @@ import (
 	"net/http"
 )
 
-//CreateUser Create new user
-var CreateUser = func(w http.ResponseWriter, r *http.Request) {
+//Create Create new user
+var Create = func(w http.ResponseWriter, r *http.Request) {
 	data := make(map[string]interface{})
 	err := json.NewDecoder(r.Body).Decode(&data)
 	if err != nil {
@@ -26,9 +26,9 @@ var CreateUser = func(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-//GetUser get user
-var GetUser = func(w http.ResponseWriter, r *http.Request) {
-	id := u.RetrieveIDParameter(r)
+//Get get user
+var Get = func(w http.ResponseWriter, r *http.Request) {
+	id := u.RetrieveIDParameter(r, "id")
 	var model = NewUser()
 	service := NewUserService(model)
 
@@ -40,9 +40,9 @@ var GetUser = func(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-//UpdateUser update user
-var UpdateUser = func(w http.ResponseWriter, r *http.Request) {
-	id := u.RetrieveIDParameter(r)
+//Update update user
+var Update = func(w http.ResponseWriter, r *http.Request) {
+	id := u.RetrieveIDParameter(r, "id")
 	data := make(map[string]interface{})
 
 	err := json.NewDecoder(r.Body).Decode(&data)
@@ -62,9 +62,9 @@ var UpdateUser = func(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-//UpdateUserPassword update user password
-var UpdateUserPassword = func(w http.ResponseWriter, r *http.Request) {
-	id := u.RetrieveIDParameter(r)
+//UpdatePassword update user password
+var UpdatePassword = func(w http.ResponseWriter, r *http.Request) {
+	id := u.RetrieveIDParameter(r, "id")
 	data := make(map[string]string)
 
 	err := json.NewDecoder(r.Body).Decode(&data)
@@ -84,9 +84,9 @@ var UpdateUserPassword = func(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-//DeleteUser delete user
-var DeleteUser = func(w http.ResponseWriter, r *http.Request) {
-	id := u.RetrieveIDParameter(r)
+//Delete delete user
+var Delete = func(w http.ResponseWriter, r *http.Request) {
+	id := u.RetrieveIDParameter(r, "id")
 	var model = NewUser()
 	service := NewUserService(model)
 

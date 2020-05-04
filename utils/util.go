@@ -35,9 +35,9 @@ func Respond(w http.ResponseWriter, data map[string]interface{}, statusCode int)
 }
 
 //RetrieveIDParameter retrieve parameter id from request route
-func RetrieveIDParameter(r *http.Request) uint {
+func RetrieveIDParameter(r *http.Request, parameter string) uint {
 	vars := mux.Vars(r)
-	id, err := strconv.ParseUint(vars["id"], 10, 64)
+	id, err := strconv.ParseUint(vars[parameter], 10, 64)
 	if err != nil {
 		return 0
 	}

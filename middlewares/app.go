@@ -54,7 +54,7 @@ var JwtAuthentication = func(next http.Handler) http.Handler {
 		})
 
 		if err != nil || !token.Valid {
-			u.Fail(w, "Malformed authentication token", "", http.StatusForbidden)
+			u.Fail(w, "Token expired or invalid", "", http.StatusForbidden)
 			return
 		}
 
