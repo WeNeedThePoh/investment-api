@@ -1,25 +1,23 @@
 package user
 
-import "investment-api/pkg/user"
-
 //MockUserModel mock
 type MockUserModel struct {
-	User         *user.User
+	User         *User
 	errorMessage error
 }
 
 //Create mock
-func (m MockUserModel) Create(data map[string]interface{}) (*user.User, error) {
+func (m MockUserModel) Create(data map[string]interface{}) (*User, error) {
 	return m.User, m.errorMessage
 }
 
 //Get mock
-func (m MockUserModel) Get(id uint) (*user.User, error) {
+func (m MockUserModel) Get(id uint) (*User, error) {
 	return m.User, m.errorMessage
 }
 
 //GetByEmail mock
-func (m MockUserModel) GetByEmail(email string) *user.User {
+func (m MockUserModel) GetByEmail(email string) *User {
 	return m.User
 }
 

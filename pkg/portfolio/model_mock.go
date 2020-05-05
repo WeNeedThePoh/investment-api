@@ -2,7 +2,7 @@ package portfolio
 
 //MockPortfolioModel mock
 type MockPortfolioModel struct {
-	Portfolio *Portfolio
+	Portfolio    *Portfolio
 	errorMessage error
 }
 
