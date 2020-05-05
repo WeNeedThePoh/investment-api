@@ -1,12 +1,12 @@
 package portfolio
 
 import (
-	portfolio "investment-api/pkg/portfolio/mock"
+	"errors"
 	"testing"
 )
 
 func TestPortfolioNotFoundGet(t *testing.T) {
-	var model = portfolio.MockPortfolioModel{Portfolio: nil}
+	var model = MockPortfolioModel{Portfolio: &Portfolio{}, errorMessage: errors.New("portfolio not found")}
 	service := NewPortfolioService(model)
 
 	_, _, code := service.Get(1, 2)
@@ -16,7 +16,7 @@ func TestPortfolioNotFoundGet(t *testing.T) {
 }
 
 func TestGet(t *testing.T) {
-	var model = portfolio.MockPortfolioModel{Portfolio: &Portfolio{Name: "portfolio name", UserID: 1, ID: 1}}
+	var model = MockPortfolioModel{Portfolio: &Portfolio{Name: "portfolio name", UserID: 1, ID: 1}}
 	service := NewPortfolioService(model)
 
 	_, _, code := service.Get(1, 1)
