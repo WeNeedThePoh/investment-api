@@ -27,6 +27,7 @@ func main() {
 	//PORTFOLIOS
 	router.HandleFunc("/users/{id:[0-9]+}/portfolios", portfolio.Create).Methods("POST")
 	router.HandleFunc("/users/{id:[0-9]+}/portfolios/{portfolio_id:[0-9]+}", portfolio.Get).Methods("GET")
+	router.HandleFunc("/users/{id:[0-9]+}/portfolios/{portfolio_id:[0-9]+}", portfolio.Delete).Methods("DELETE")
 
 	//MIDDLEWARES
 	router.Use(middlewares.JwtAuthentication)

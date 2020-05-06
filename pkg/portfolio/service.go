@@ -42,3 +42,18 @@ func (service *Service) Get(userID uint, portfolioID uint) (map[string]interface
 	resp := portfolio.ToMap()
 	return resp, "", 0
 }
+
+//Delete portfolio
+func (service *Service) Delete(userID uint, portfolioID uint) (bool, string, int) {
+	portfolio, err := service.Portfolio.Get(userID, portfolioID)
+	if err != nil {
+		return false, "portfolio not found", http.StatusNotFound
+	}
+
+	err = portfolio.Delete()
+	if err != nil {
+		return false, "asdasd", http.StatusBadRequest
+	}
+
+	return true, "", 0
+}

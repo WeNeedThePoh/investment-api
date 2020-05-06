@@ -41,3 +41,18 @@ var Get = func(w http.ResponseWriter, r *http.Request) {
 		u.Success(w, portfolio, http.StatusOK)
 	}
 }
+
+//Delete portfolio
+var Delete = func(w http.ResponseWriter, r *http.Request) {
+	id := u.RetrieveIDParameter(r, "id")
+	portfolioID := u.RetrieveIDParameter(r, "portfolio_id")
+	var model = NewPortfolio()
+	service := NewPortfolioService(model)
+
+	deleted, message, code := service.Delete(id, portfolioID)
+	if deleted == false {
+		u.Fail(w, message, "", code)
+	} else {
+		u.Success(w, nil, http.StatusNoContent)
+	}
+}

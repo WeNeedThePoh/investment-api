@@ -24,3 +24,13 @@ func TestGet(t *testing.T) {
 		t.Errorf("Get(1, 1) = %d; want 200", code)
 	}
 }
+
+func TestDelete(t *testing.T) {
+	var model = MockPortfolioModel{Portfolio: &Portfolio{Name: "portfolio name", UserID: 1, ID: 1}}
+	service := NewPortfolioService(model)
+
+	_, _, code := service.Delete(1, 1)
+	if code != 0 {
+		t.Errorf("Get(1, 1) = %d; want 0", code)
+	}
+}

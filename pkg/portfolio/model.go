@@ -12,6 +12,7 @@ type Model interface {
 	Create(userID uint, name string) (*Portfolio, error)
 	GetByName(userID uint, name string) (*Portfolio, error)
 	Get(userID uint, ID uint) (*Portfolio, error)
+	Delete() error
 }
 
 //Portfolio model
@@ -77,6 +78,16 @@ func (portfolio *Portfolio) Get(userID uint, ID uint) (*Portfolio, error) {
 	}
 
 	return portfolio, nil
+}
+
+//Delete portfolio
+func (portfolio *Portfolio) Delete() error {
+	err := utils.GetDB().Delete(portfolio)
+	if err == nil {
+		return errors.New("something went wrong while deleting portfolio")
+	}
+
+	return nil
 }
 
 //ToMap transformer struct to map

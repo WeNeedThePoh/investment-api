@@ -20,3 +20,8 @@ func (m MockPortfolioModel) Get(userID uint, ID uint) (*Portfolio, error) {
 func (m MockPortfolioModel) GetByName(userID uint, name string) (*Portfolio, error) {
 	return m.Portfolio, m.errorMessage
 }
+
+//Delete mock
+func (m MockPortfolioModel) Delete() error {
+	return m.errorMessage
+}
