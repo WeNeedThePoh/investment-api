@@ -12,6 +12,7 @@ type Model interface {
 	Create(userID uint, name string) (*Portfolio, error)
 	GetByName(userID uint, name string) (*Portfolio, error)
 	Get(userID uint, ID uint) (*Portfolio, error)
+	Update(data map[string]interface{}) error
 	Delete() error
 }
 
@@ -78,6 +79,16 @@ func (portfolio *Portfolio) Get(userID uint, ID uint) (*Portfolio, error) {
 	}
 
 	return portfolio, nil
+}
+
+//Update portfolio data
+func (portfolio *Portfolio) Update(data map[string]interface{}) error {
+	errs := utils.GetDB().Model(portfolio).Update(data).GetErrors()
+	if len(errs) != 0 {
+		return errors.New("something went wrong while updating portfolio")
+	}
+
+	return nil
 }
 
 //Delete portfolio

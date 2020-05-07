@@ -21,6 +21,11 @@ func (m MockPortfolioModel) GetByName(userID uint, name string) (*Portfolio, err
 	return m.Portfolio, m.errorMessage
 }
 
+//Update mock
+func (m MockPortfolioModel) Update(data map[string]interface{}) error {
+	return m.errorMessage
+}
+
 //Delete mock
 func (m MockPortfolioModel) Delete() error {
 	return m.errorMessage

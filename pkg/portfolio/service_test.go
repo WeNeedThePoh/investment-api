@@ -25,6 +25,16 @@ func TestGet(t *testing.T) {
 	}
 }
 
+func TestUpdate(t *testing.T) {
+	var model = MockPortfolioModel{Portfolio: &Portfolio{Name: "portfolio name", UserID: 1, ID: 1}}
+	service := NewPortfolioService(model)
+
+	_, _, code := service.Update(1, 1, map[string]interface{}{"name": "new name"})
+	if code != 0 {
+		t.Errorf("Get(1, 1, map[string]interface{}{\"name\": \"new name\"}) = %d; want 200", code)
+	}
+}
+
 func TestDelete(t *testing.T) {
 	var model = MockPortfolioModel{Portfolio: &Portfolio{Name: "portfolio name", UserID: 1, ID: 1}}
 	service := NewPortfolioService(model)
