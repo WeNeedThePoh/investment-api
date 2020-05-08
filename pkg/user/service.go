@@ -24,7 +24,7 @@ func (service *Service) Create(data map[string]interface{}) (map[string]interfac
 
 	newUser, err := service.User.Create(data)
 	if err != nil {
-		return nil, "asd", http.StatusBadRequest
+		return nil, err.Error(), http.StatusBadRequest
 	}
 
 	resp := newUser.ToMap()
@@ -58,7 +58,7 @@ func (service *Service) Update(id uint, data map[string]interface{}) (bool, stri
 
 	err = user.Update(data)
 	if err != nil {
-		return false, "asdasd", http.StatusBadRequest
+		return false, err.Error(), http.StatusBadRequest
 	}
 
 	return true, "", 0
@@ -78,7 +78,7 @@ func (service *Service) UpdatePassword(id uint, oldPassword string, password str
 
 	err = user.UpdatePassword(password)
 	if err != nil {
-		return false, "asdasd", http.StatusBadRequest
+		return false, err.Error(), http.StatusBadRequest
 	}
 
 	return true, "", 0
@@ -93,7 +93,7 @@ func (service *Service) Delete(id uint) (bool, string, int) {
 
 	err = user.Delete()
 	if err != nil {
-		return false, "asdasd", http.StatusBadRequest
+		return false, err.Error(), http.StatusBadRequest
 	}
 
 	return true, "", 0

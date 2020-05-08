@@ -25,7 +25,7 @@ func (service *Service) Create(userID uint, name string) (map[string]interface{}
 
 	newPortfolio, err := service.Portfolio.Create(userID, name)
 	if err != nil {
-		return nil, "asd", http.StatusBadRequest
+		return nil, err.Error(), http.StatusBadRequest
 	}
 
 	resp := newPortfolio.ToMap()
@@ -52,7 +52,7 @@ func (service *Service) Update(userID uint, id uint, data map[string]interface{}
 
 	err = portfolio.Update(data)
 	if err != nil {
-		return false, "asdasd", http.StatusBadRequest
+		return false, err.Error(), http.StatusBadRequest
 	}
 
 	return true, "", 0
@@ -67,7 +67,7 @@ func (service *Service) Delete(userID uint, portfolioID uint) (bool, string, int
 
 	err = portfolio.Delete()
 	if err != nil {
-		return false, "asdasd", http.StatusBadRequest
+		return false, err.Error(), http.StatusBadRequest
 	}
 
 	return true, "", 0

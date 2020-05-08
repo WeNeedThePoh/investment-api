@@ -42,7 +42,6 @@ var Get = func(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-
 //Update portfolio
 var Update = func(w http.ResponseWriter, r *http.Request) {
 	userID := u.RetrieveIDParameter(r, "id")
