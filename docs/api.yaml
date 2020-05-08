@@ -212,11 +212,11 @@ paths:
           content:
             application/json:
               schema:
-                $ref: 'schemas/transaction.yaml'
+                $ref: 'schemas/stock.yaml'
               example:
                 $ref: 'examples/transactions.json'
     post:
-      summary: Add a new transaction
+      summary: Add a new stock
       tags:
         - transactions
       requestBody:
@@ -224,16 +224,16 @@ paths:
         content:
           application/json:
             schema:
-              $ref: 'schemas/transaction.yaml'
+              $ref: 'schemas/stock.yaml'
             example:
               $ref: 'examples/transaction_post.json'
       responses:
         200:
-          description: The transaction was added successfully.
+          description: The stock was added successfully.
           content:
             application/json:
               schema:
-                $ref: 'schemas/transaction.yaml'
+                $ref: 'schemas/stock.yaml'
               example:
                 $ref: 'examples/transactions.json'
   /users/{user-id}/portfolios/{portfolio-id}/transactions/{transaction-id}:
@@ -244,11 +244,11 @@ paths:
       - name: portfolio-id
         in: path
         required: true
-      - name: transaction-id
+      - name: stock-id
         in: path
         required: true
     get:
-      summary: Get a specific transaction
+      summary: Get a specific stock
       tags:
         - transactions
       responses:
@@ -257,11 +257,11 @@ paths:
           content:
             application/json:
               schema:
-                $ref: 'schemas/transaction.yaml'
+                $ref: 'schemas/stock.yaml'
               example:
-                $ref: 'examples/transaction.json'
+                $ref: 'examples/stock.json'
     patch:
-      summary: Update a specific transaction
+      summary: Update a specific stock
       tags:
         - transactions
       requestBody:
@@ -269,16 +269,16 @@ paths:
         content:
           application/json:
             schema:
-              $ref: 'schemas/transaction.yaml'
+              $ref: 'schemas/stock.yaml'
             example:
               $ref: 'examples/transaction_patch.json'
       responses:
         '204':
-          description: The transaction was updated successfully.
+          description: The stock was updated successfully.
     delete:
-      summary: Delete a specific transaction
+      summary: Delete a specific stock
       tags:
         - transactions
       responses:
         '204':
-          description: The transaction was deleted successfully.
+          description: The stock was deleted successfully.

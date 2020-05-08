@@ -43,6 +43,7 @@ Table stocks {
   div_yield float
   div_share float
   eps float
+  updated_at timestamp
 }
 
 Table portfolios {

@@ -6,6 +6,7 @@ import (
 	"investment-api/middlewares"
 	"investment-api/pkg/auth"
 	"investment-api/pkg/portfolio"
+	"investment-api/pkg/stock"
 	"investment-api/pkg/user"
 	"net/http"
 	"os"
@@ -16,6 +17,12 @@ func main() {
 
 	//AUTH
 	router.HandleFunc("/login", auth.Authenticate).Methods("POST")
+
+	//STOCKS
+	router.HandleFunc("/stocks", stock.Create).Methods("POST")
+	router.HandleFunc("/stocks/{id:[0-9]+}", stock.Get).Methods("GET")
+	router.HandleFunc("/stocks/{id:[0-9]+}", stock.Update).Methods("PATCH")
+	router.HandleFunc("/stocks/{id:[0-9]+}", stock.Delete).Methods("DELETE")
 
 	//USERS
 	router.HandleFunc("/users", user.Create).Methods("POST")
