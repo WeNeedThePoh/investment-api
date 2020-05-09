@@ -59,13 +59,13 @@ var JwtAuthentication = func(next http.Handler) http.Handler {
 		}
 
 		vars := mux.Vars(r)
-		id, err := strconv.ParseInt(vars["id"], 10, 64)
-		if err != nil && len(vars) > 0 {
+		userID, err := strconv.ParseInt(vars["user_id"], 10, 64)
+		if err != nil && vars["user_id"] != "" {
 			u.Fail(w, "Request parameter not found", "", http.StatusBadRequest)
 			return
 		}
 
-		if tk.UserID != uint(id) && len(vars) > 0 {
+		if tk.UserID != uint(userID) && vars["user_id"] != "" {
 			u.Fail(w, "Request user id didn't match token user id", "", http.StatusUnauthorized)
 			return
 		}

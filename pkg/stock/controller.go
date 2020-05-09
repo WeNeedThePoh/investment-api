@@ -2,6 +2,7 @@ package stock
 
 import (
 	"encoding/json"
+	"fmt"
 	u "investment-api/utils"
 	"net/http"
 )
@@ -28,7 +29,7 @@ var Create = func(w http.ResponseWriter, r *http.Request) {
 
 //Get stock
 var Get = func(w http.ResponseWriter, r *http.Request) {
-	stockID := u.RetrieveIDParameter(r, "id")
+	stockID := u.RetrieveIDParameter(r, "stock_id")
 	var model = NewStock()
 	service := NewStockService(model)
 
@@ -42,9 +43,9 @@ var Get = func(w http.ResponseWriter, r *http.Request) {
 
 //Update stock
 var Update = func(w http.ResponseWriter, r *http.Request) {
-	stockID := u.RetrieveIDParameter(r, "id")
+	stockID := u.RetrieveIDParameter(r, "stock_id")
 	data := make(map[string]interface{})
-
+	fmt.Println(data)
 	err := json.NewDecoder(r.Body).Decode(&data)
 	if err != nil {
 		u.Fail(w, "Missing required data", "The body payload can not be empty", http.StatusBadRequest)
@@ -53,6 +54,7 @@ var Update = func(w http.ResponseWriter, r *http.Request) {
 
 	var model = NewStock()
 	service := NewStockService(model)
+
 	updated, message, code := service.Update(stockID, data)
 
 	if updated == false {
@@ -64,7 +66,7 @@ var Update = func(w http.ResponseWriter, r *http.Request) {
 
 //Delete stock
 var Delete = func(w http.ResponseWriter, r *http.Request) {
-	stockID := u.RetrieveIDParameter(r, "id")
+	stockID := u.RetrieveIDParameter(r, "stock_id")
 	var model = NewStock()
 	service := NewStockService(model)
 

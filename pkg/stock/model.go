@@ -22,7 +22,7 @@ type Stock struct {
 	Country               uint       `json:"country_id" gorm:"column:country_id"`
 	Symbol                string     `json:"symbol"`
 	CompanyName           string     `json:"company_name"`
-	Price                 float64   `json:"price;default:0"`
+	Price                 float64   `json:"price" gorm:"default:0"`
 	MinPrice              float64   `json:"min_price" gorm:"column:min_price;default:0"`
 	MaxPrice              float64   `json:"max_price" gorm:"column:max_price;default:0"`
 	DailyChange           float64   `json:"daily_change" gorm:"column:daily_change;default:0"`

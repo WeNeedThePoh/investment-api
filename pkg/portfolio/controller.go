@@ -8,7 +8,7 @@ import (
 
 //Create Create new portfolio
 var Create = func(w http.ResponseWriter, r *http.Request) {
-	id := u.RetrieveIDParameter(r, "id")
+	id := u.RetrieveIDParameter(r, "user_id")
 	data := make(map[string]interface{})
 	err := json.NewDecoder(r.Body).Decode(&data)
 	if err != nil {
@@ -29,7 +29,7 @@ var Create = func(w http.ResponseWriter, r *http.Request) {
 
 //Get get user portfolio
 var Get = func(w http.ResponseWriter, r *http.Request) {
-	id := u.RetrieveIDParameter(r, "id")
+	id := u.RetrieveIDParameter(r, "user_id")
 	portfolioID := u.RetrieveIDParameter(r, "portfolio_id")
 	var model = NewPortfolio()
 	service := NewPortfolioService(model)
@@ -44,7 +44,7 @@ var Get = func(w http.ResponseWriter, r *http.Request) {
 
 //Update portfolio
 var Update = func(w http.ResponseWriter, r *http.Request) {
-	userID := u.RetrieveIDParameter(r, "id")
+	userID := u.RetrieveIDParameter(r, "user_id")
 	id := u.RetrieveIDParameter(r, "portfolio_id")
 	data := make(map[string]interface{})
 
@@ -67,7 +67,7 @@ var Update = func(w http.ResponseWriter, r *http.Request) {
 
 //Delete portfolio
 var Delete = func(w http.ResponseWriter, r *http.Request) {
-	id := u.RetrieveIDParameter(r, "id")
+	id := u.RetrieveIDParameter(r, "user_id")
 	portfolioID := u.RetrieveIDParameter(r, "portfolio_id")
 	var model = NewPortfolio()
 	service := NewPortfolioService(model)

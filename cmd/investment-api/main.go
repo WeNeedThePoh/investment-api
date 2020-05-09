@@ -20,22 +20,22 @@ func main() {
 
 	//STOCKS
 	router.HandleFunc("/stocks", stock.Create).Methods("POST")
-	router.HandleFunc("/stocks/{id:[0-9]+}", stock.Get).Methods("GET")
-	router.HandleFunc("/stocks/{id:[0-9]+}", stock.Update).Methods("PATCH")
-	router.HandleFunc("/stocks/{id:[0-9]+}", stock.Delete).Methods("DELETE")
+	router.HandleFunc("/stocks/{stock_id:[0-9]+}", stock.Get).Methods("GET")
+	router.HandleFunc("/stocks/{stock_id:[0-9]+}", stock.Update).Methods("PATCH")
+	router.HandleFunc("/stocks/{stock_id:[0-9]+}", stock.Delete).Methods("DELETE")
 
 	//USERS
 	router.HandleFunc("/users", user.Create).Methods("POST")
-	router.HandleFunc("/users/{id:[0-9]+}", user.Get).Methods("GET")
-	router.HandleFunc("/users/{id:[0-9]+}", user.Update).Methods("PATCH")
-	router.HandleFunc("/users/{id:[0-9]+}/password", user.UpdatePassword).Methods("PATCH")
-	router.HandleFunc("/users/{id:[0-9]+}", user.Delete).Methods("DELETE")
+	router.HandleFunc("/users/{user_id:[0-9]+}", user.Get).Methods("GET")
+	router.HandleFunc("/users/{user_id:[0-9]+}", user.Update).Methods("PATCH")
+	router.HandleFunc("/users/{user_id:[0-9]+}/password", user.UpdatePassword).Methods("PATCH")
+	router.HandleFunc("/users/{user_id:[0-9]+}", user.Delete).Methods("DELETE")
 
 	//PORTFOLIOS
-	router.HandleFunc("/users/{id:[0-9]+}/portfolios", portfolio.Create).Methods("POST")
-	router.HandleFunc("/users/{id:[0-9]+}/portfolios/{portfolio_id:[0-9]+}", portfolio.Get).Methods("GET")
-	router.HandleFunc("/users/{id:[0-9]+}/portfolios/{portfolio_id:[0-9]+}", portfolio.Update).Methods("PATCH")
-	router.HandleFunc("/users/{id:[0-9]+}/portfolios/{portfolio_id:[0-9]+}", portfolio.Delete).Methods("DELETE")
+	router.HandleFunc("/users/{user_id:[0-9]+}/portfolios", portfolio.Create).Methods("POST")
+	router.HandleFunc("/users/{user_id:[0-9]+}/portfolios/{portfolio_id:[0-9]+}", portfolio.Get).Methods("GET")
+	router.HandleFunc("/users/{user_id:[0-9]+}/portfolios/{portfolio_id:[0-9]+}", portfolio.Update).Methods("PATCH")
+	router.HandleFunc("/users/{user_id:[0-9]+}/portfolios/{portfolio_id:[0-9]+}", portfolio.Delete).Methods("DELETE")
 
 	//MIDDLEWARES
 	router.Use(middlewares.JwtAuthentication)

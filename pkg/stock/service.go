@@ -1,6 +1,7 @@
 package stock
 
 import (
+	"fmt"
 	"net/http"
 )
 
@@ -48,6 +49,7 @@ func (service *Service) Update(stockID uint, data map[string]interface{}) (bool,
 		return false, "stock not found", http.StatusNotFound
 	}
 
+	fmt.Println(data)
 	err = stock.Update(data)
 	if err != nil {
 		return false, err.Error(), http.StatusBadRequest

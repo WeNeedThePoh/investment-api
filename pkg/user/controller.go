@@ -28,7 +28,7 @@ var Create = func(w http.ResponseWriter, r *http.Request) {
 
 //Get get user
 var Get = func(w http.ResponseWriter, r *http.Request) {
-	id := u.RetrieveIDParameter(r, "id")
+	id := u.RetrieveIDParameter(r, "user_id")
 	var model = NewUser()
 	service := NewUserService(model)
 
@@ -42,7 +42,7 @@ var Get = func(w http.ResponseWriter, r *http.Request) {
 
 //Update update user
 var Update = func(w http.ResponseWriter, r *http.Request) {
-	id := u.RetrieveIDParameter(r, "id")
+	id := u.RetrieveIDParameter(r, "user_id")
 	data := make(map[string]interface{})
 
 	err := json.NewDecoder(r.Body).Decode(&data)
@@ -64,7 +64,7 @@ var Update = func(w http.ResponseWriter, r *http.Request) {
 
 //UpdatePassword update user password
 var UpdatePassword = func(w http.ResponseWriter, r *http.Request) {
-	id := u.RetrieveIDParameter(r, "id")
+	id := u.RetrieveIDParameter(r, "user_id")
 	data := make(map[string]string)
 
 	err := json.NewDecoder(r.Body).Decode(&data)
@@ -86,7 +86,7 @@ var UpdatePassword = func(w http.ResponseWriter, r *http.Request) {
 
 //Delete delete user
 var Delete = func(w http.ResponseWriter, r *http.Request) {
-	id := u.RetrieveIDParameter(r, "id")
+	id := u.RetrieveIDParameter(r, "user_id")
 	var model = NewUser()
 	service := NewUserService(model)
 
