@@ -6,6 +6,7 @@ import (
 	"investment-api/middlewares"
 	"investment-api/pkg/auth"
 	"investment-api/pkg/portfolio"
+	"investment-api/pkg/stock"
 	"investment-api/pkg/user"
 	"net/http"
 	"os"
@@ -24,13 +25,17 @@ func main() {
 	router.HandleFunc("/users/{user_id:[0-9]+}/password", user.UpdatePassword).Methods("PATCH")
 	router.HandleFunc("/users/{user_id:[0-9]+}", user.Delete).Methods("DELETE")
 
+	//STOCKS
+	router.HandleFunc("/stocks", stock.Search).Methods("GET")
+	router.HandleFunc("/stocks/{symbol}", stock.Get).Methods("GET")
+
 	//PORTFOLIOS
 	router.HandleFunc("/users/{user_id:[0-9]+}/portfolios", portfolio.Create).Methods("POST")
 	router.HandleFunc("/users/{user_id:[0-9]+}/portfolios/{portfolio_id:[0-9]+}", portfolio.Get).Methods("GET")
 	router.HandleFunc("/users/{user_id:[0-9]+}/portfolios/{portfolio_id:[0-9]+}", portfolio.Update).Methods("PATCH")
 	router.HandleFunc("/users/{user_id:[0-9]+}/portfolios/{portfolio_id:[0-9]+}", portfolio.Delete).Methods("DELETE")
 
-	//MIDDLEWARES
+	//MIDDLEWARE
 	router.Use(middlewares.JwtAuthentication)
 	router.NotFoundHandler = middlewares.NotFoundHandler()
 

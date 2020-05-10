@@ -22,16 +22,16 @@ type Stock struct {
 	Country               uint       `json:"country_id" gorm:"column:country_id"`
 	Symbol                string     `json:"symbol"`
 	CompanyName           string     `json:"company_name"`
-	Price                 float64   `json:"price" gorm:"default:0"`
-	MinPrice              float64   `json:"min_price" gorm:"column:min_price;default:0"`
-	MaxPrice              float64   `json:"max_price" gorm:"column:max_price;default:0"`
-	DailyChange           float64   `json:"daily_change" gorm:"column:daily_change;default:0"`
-	DailyChangePercentage float64   `json:"daily_change_percentage" gorm:"column:daily_change_percentage;default:0"`
-	YearChange            float64   `json:"year_change" gorm:"column:year_change;default:0"`
-	YearChangePercentage  float64   `json:"year_change_percentage" gorm:"column:year_change_percentage;default:0"`
-	DivYield              float64   `json:"div_yield" gorm:"column:div_yield;default:0"`
-	DivShare              float64   `json:"div_share" gorm:"column:div_share;default:0"`
-	Eps                   float64   `json:"eps" gorm:"column:eps;default:0"`
+	Price                 float64    `json:"price" gorm:"default:0"`
+	MinPrice              float64    `json:"min_price" gorm:"column:min_price;default:0"`
+	MaxPrice              float64    `json:"max_price" gorm:"column:max_price;default:0"`
+	DailyChange           float64    `json:"daily_change" gorm:"column:daily_change;default:0"`
+	DailyChangePercentage float64    `json:"daily_change_percentage" gorm:"column:daily_change_percentage;default:0"`
+	YearChange            float64    `json:"year_change" gorm:"column:year_change;default:0"`
+	YearChangePercentage  float64    `json:"year_change_percentage" gorm:"column:year_change_percentage;default:0"`
+	DivYield              float64    `json:"div_yield" gorm:"column:div_yield;default:0"`
+	DivShare              float64    `json:"div_share" gorm:"column:div_share;default:0"`
+	Eps                   float64    `json:"eps" gorm:"column:eps;default:0"`
 	UpdatedAt             *time.Time `json:"updated_at"`
 }
 
