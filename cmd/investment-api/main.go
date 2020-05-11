@@ -31,6 +31,7 @@ func main() {
 
 	//PORTFOLIOS
 	router.HandleFunc("/users/{user_id:[0-9]+}/portfolios", portfolio.Create).Methods("POST")
+	router.HandleFunc("/users/{user_id:[0-9]+}/portfolios", portfolio.GetAll).Methods("GET")
 	router.HandleFunc("/users/{user_id:[0-9]+}/portfolios/{portfolio_id:[0-9]+}", portfolio.Get).Methods("GET")
 	router.HandleFunc("/users/{user_id:[0-9]+}/portfolios/{portfolio_id:[0-9]+}", portfolio.Update).Methods("PATCH")
 	router.HandleFunc("/users/{user_id:[0-9]+}/portfolios/{portfolio_id:[0-9]+}", portfolio.Delete).Methods("DELETE")

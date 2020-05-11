@@ -32,11 +32,21 @@ func (service *Service) Create(userID uint, name string) (map[string]interface{}
 	return resp, "", 0
 }
 
+//GetAll user portfolios
+func (service *Service) GetAll(userID uint) ([]*Portfolio, string, int) {
+	portfolios, err := service.Portfolio.GetAll(userID)
+	if err != nil {
+		return nil, err.Error(), http.StatusNotFound
+	}
+
+	return portfolios, "", 0
+}
+
 //Get user portfolio
 func (service *Service) Get(userID uint, portfolioID uint) (map[string]interface{}, string, int) {
 	portfolio, err := service.Portfolio.Get(userID, portfolioID)
 	if err != nil {
-		return nil, "portfolio not found", http.StatusNotFound
+		return nil, err.Error(), http.StatusNotFound
 	}
 
 	resp := portfolio.ToMap()
@@ -47,7 +57,7 @@ func (service *Service) Get(userID uint, portfolioID uint) (map[string]interface
 func (service *Service) Update(userID uint, id uint, data map[string]interface{}) (bool, string, int) {
 	portfolio, err := service.Portfolio.Get(userID, id)
 	if err != nil {
-		return false, "portfolio not found", http.StatusNotFound
+		return false, err.Error(), http.StatusNotFound
 	}
 
 	err = portfolio.Update(data)
@@ -62,7 +72,7 @@ func (service *Service) Update(userID uint, id uint, data map[string]interface{}
 func (service *Service) Delete(userID uint, portfolioID uint) (bool, string, int) {
 	portfolio, err := service.Portfolio.Get(userID, portfolioID)
 	if err != nil {
-		return false, "portfolio not found", http.StatusNotFound
+		return false, err.Error(), http.StatusNotFound
 	}
 
 	err = portfolio.Delete()

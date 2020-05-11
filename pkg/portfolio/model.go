@@ -11,6 +11,7 @@ import (
 type Model interface {
 	Create(userID uint, name string) (*Portfolio, error)
 	GetByName(userID uint, name string) (*Portfolio, error)
+	GetAll(userID uint) ([]*Portfolio, error)
 	Get(userID uint, ID uint) (*Portfolio, error)
 	Update(data map[string]interface{}) error
 	Delete() error
@@ -69,6 +70,18 @@ func (portfolio *Portfolio) GetByName(userID uint, name string) (*Portfolio, err
 	}
 
 	return portfolio, nil
+}
+
+//Get get user's portfolio by ID
+func (portfolio *Portfolio) GetAll(userID uint) ([]*Portfolio, error) {
+	var portfolios []*Portfolio
+
+	err := utils.GetDB().Table("portfolios").Where("user_id = ?", userID).Find(&portfolios).GetErrors()
+	if len(err) != 0 {
+		return portfolios, errors.New("error while fetching user portfolios")
+	}
+
+	return portfolios, nil
 }
 
 //Get get user's portfolio by ID

@@ -2,6 +2,7 @@ package portfolio
 
 import (
 	"encoding/json"
+	"fmt"
 	u "investment-api/utils"
 	"net/http"
 )
@@ -24,6 +25,22 @@ var Create = func(w http.ResponseWriter, r *http.Request) {
 		u.Fail(w, message, "", code)
 	} else {
 		u.Success(w, user, http.StatusCreated)
+	}
+}
+
+//GetAll user portfolios
+var GetAll = func(w http.ResponseWriter, r *http.Request) {
+	id := u.RetrieveIDParameter(r, "user_id")
+	var model = NewPortfolio()
+	service := NewPortfolioService(model)
+
+	portfolios, message, code := service.GetAll(id)
+
+	fmt.Println(portfolios[0])
+	if portfolios == nil {
+		u.Fail(w, message, "", code)
+	} else {
+		//u.Success(w, portfolios, http.StatusOK)
 	}
 }
 
