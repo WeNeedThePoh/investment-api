@@ -203,22 +203,22 @@ paths:
         in: path
         required: true
     get:
-      summary: Get all portfolio transactions
+      summary: Get all portfolio transaction
       tags:
-        - transactions
+        - transaction
       responses:
         200:
-          description: All portfolio transactions data
+          description: All portfolio transaction data
           content:
             application/json:
               schema:
                 $ref: 'schemas/stock.yaml'
               example:
-                $ref: 'examples/transactions.json'
+                $ref: 'examples/transaction.json'
     post:
       summary: Add a new stock
       tags:
-        - transactions
+        - transaction
       requestBody:
         required: true
         content:
@@ -235,7 +235,7 @@ paths:
               schema:
                 $ref: 'schemas/stock.yaml'
               example:
-                $ref: 'examples/transactions.json'
+                $ref: 'examples/transaction.json'
   /users/{user-id}/portfolios/{portfolio-id}/transactions/{transaction-id}:
     parameters:
       - name: user-id
@@ -250,7 +250,7 @@ paths:
     get:
       summary: Get a specific stock
       tags:
-        - transactions
+        - transaction
       responses:
         200:
           description: Transaction data
@@ -263,7 +263,7 @@ paths:
     patch:
       summary: Update a specific stock
       tags:
-        - transactions
+        - transaction
       requestBody:
         required: true
         content:
@@ -278,7 +278,7 @@ paths:
     delete:
       summary: Delete a specific stock
       tags:
-        - transactions
+        - transaction
       responses:
         '204':
           description: The stock was deleted successfully.

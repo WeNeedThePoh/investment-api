@@ -39,12 +39,12 @@ type Portfolio struct {
 	DeletedAt             *time.Time `json:"-"`
 }
 
-//NewPortfolio instantiate new user model
+//NewPortfolio instantiate new portfolio model
 func NewPortfolio() Model {
 	return &Portfolio{}
 }
 
-//Create a new user
+//Create a new portfolio
 func (portfolio *Portfolio) Create(userID uint, name string) (*Portfolio, error) {
 	portfolio.Name = name
 	portfolio.UserID = userID
