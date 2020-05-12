@@ -2,7 +2,6 @@ package portfolio
 
 import (
 	"encoding/json"
-	"fmt"
 	u "investment-api/utils"
 	"net/http"
 )
@@ -36,11 +35,10 @@ var GetAll = func(w http.ResponseWriter, r *http.Request) {
 
 	portfolios, message, code := service.GetAll(id)
 
-	fmt.Println(portfolios[0])
 	if portfolios == nil {
 		u.Fail(w, message, "", code)
 	} else {
-		//u.Success(w, portfolios, http.StatusOK)
+		u.Success(w, portfolios, http.StatusOK)
 	}
 }
 

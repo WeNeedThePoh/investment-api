@@ -13,7 +13,7 @@ import (
 type Model interface {
 	Create(data map[string]interface{}) (*User, error)
 	Get(id uint) (*User, error)
-	GetByEmail(email string) *User
+	GetByEmail(email string) (*User, error)
 	Update(data map[string]interface{}) error
 	UpdatePassword(newPassword string) error
 	Delete() error
@@ -28,12 +28,12 @@ type User struct {
 	Email         string     `json:"email" gorm:"size:75;not null"`
 	FirstName     string     `json:"first_name" gorm:"size:40;not null"`
 	LastName      *string    `json:"last_name" gorm:"size:40"`
-	Password      string     `json:"password" gorm:"size:255;not null"`
-	PasswordReset *string    `json:"password_reset" gorm:"size:255"`
+	Password      string     `json:"-" gorm:"size:255;not null"`
+	PasswordReset *string    `json:"-" gorm:"size:255"`
 	Active        bool       `json:"active"`
-	CreatedAt     time.Time  `json:"created_at"`
-	UpdatedAt     *time.Time `json:"updated_at"`
-	DeletedAt     *time.Time `json:"deleted_at"`
+	CreatedAt     time.Time  `json:"-"`
+	UpdatedAt     *time.Time `json:"-"`
+	DeletedAt     *time.Time `json:"-"`
 }
 
 //NewUser instantiate new user model
@@ -66,13 +66,13 @@ func (user *User) Get(id uint) (*User, error) {
 }
 
 //GetByEmail get user by email
-func (user *User) GetByEmail(email string) *User {
+func (user *User) GetByEmail(email string) (*User, error) {
 	err := utils.GetDB().Table("users").Where("email = ?", email).First(user).GetErrors()
 	if user.Email == "" && len(err) != 0 {
-		return nil
+		return user, errors.New("user not found")
 	}
 
-	return user
+	return user, nil
 }
 
 //Update user data

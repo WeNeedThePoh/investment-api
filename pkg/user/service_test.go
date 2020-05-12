@@ -6,7 +6,7 @@ import (
 )
 
 func TestGetOnNotFound(t *testing.T) {
-	var model = MockUserModel{User: &User{}, errorMessage: errors.New("user not found")}
+	var model = MockUserModel{User: &User{}, ErrorMessage: errors.New("user not found")}
 	service := NewUserService(model)
 
 	_, _, code := service.Get(1)
@@ -26,7 +26,7 @@ func TestGet(t *testing.T) {
 }
 
 func TestUpdateOnNotFound(t *testing.T) {
-	var model = MockUserModel{User: &User{}, errorMessage: errors.New("user not found")}
+	var model = MockUserModel{User: &User{}, ErrorMessage: errors.New("user not found")}
 	service := NewUserService(model)
 
 	_, _, code := service.Update(1, map[string]interface{}{"first_name": "new name"})
@@ -46,7 +46,7 @@ func TestUpdate(t *testing.T) {
 }
 
 func TestDeleteOnNotFound(t *testing.T) {
-	var model = MockUserModel{User: &User{}, errorMessage: errors.New("user not found")}
+	var model = MockUserModel{User: &User{}, ErrorMessage: errors.New("user not found")}
 	service := NewUserService(model)
 
 	_, _, code := service.Delete(1)

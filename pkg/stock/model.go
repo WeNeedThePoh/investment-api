@@ -32,7 +32,7 @@ type Stock struct {
 	DivYield              float64    `json:"div_yield" gorm:"column:div_yield;default:0"`
 	DivShare              float64    `json:"div_share" gorm:"column:div_share;default:0"`
 	Eps                   float64    `json:"eps" gorm:"column:eps;default:0"`
-	UpdatedAt             *time.Time `json:"updated_at"`
+	UpdatedAt             *time.Time `json:"-"`
 }
 
 //NewStock instantiate new stock model

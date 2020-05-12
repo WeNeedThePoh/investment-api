@@ -23,15 +23,22 @@ DB_MIGRATION_PATH=db/migrations
 .PHONY: help
 all: help
 help:
-	@echo "---------------------------------------------"
-	@echo "List of available targets:"
-	@echo "  start                    - Start the Go application."
-	@echo "  stop                     - Stop the Go application."
-	@echo "  compile                  - Compile Go binary."
-	@echo "  build                    - Build Go binary."
-	@echo "  clean                    - Clean up project."
-	@echo "  install                  - Install dependencies."
-	@echo "  help                     - Shows this dialog."
+	@echo "|-----------------------------------------------------------------------------------|"
+	@echo "| List of available targets:                                                        |"
+	@echo "|  install                  - Install dependencies.                                 |"
+	@echo "|  start                    - Start the Go application using binary.                |"
+	@echo "|  run                      - Start the Go application using main.go file.          |"
+	@echo "|  stop                     - Stop the Go application.                              |"
+	@echo "|  compile                  - Compile Go binary.                                    |"
+	@echo "|  build                    - Build Go binary.                                      |"
+	@echo "|  clean                    - Clean up project.                                     |"
+	@echo "|  test                     - Run tests.                                            |"
+	@echo "|  lint                     - Run linter (go fmt && golint).                        |"
+	@echo "|  migration                - Generate migration files with 'name=migration_name'.  |"
+	@echo "|  migrate_up               - Run migrations UP.                                    |"
+	@echo "|  migrate_down             - Run migrations DOWN.                                  |"
+	@echo "|  help                     - Shows this dialog.                                    |"
+	@echo "|-----------------------------------------------------------------------------------|"
 	@exit 0
 
 .PHONY: install
@@ -83,6 +90,10 @@ lint:
 test:
 	@ echo "$(OK_COLOR)==> Running tests... $(NO_COLOR)"
 	@ go test ./... -v
+
+migration:
+	@echo "$(OK_COLOR)==> Generating migration files... $(NO_COLOR)"
+	@migrate create -ext sql -dir db/migrations -seq $(name)
 
 migrate_up:
 	@echo "$(OK_COLOR)==> Migrating DB... $(NO_COLOR)"

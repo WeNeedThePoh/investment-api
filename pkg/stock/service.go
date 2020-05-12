@@ -1,7 +1,6 @@
 package stock
 
 import (
-	"fmt"
 	"net/http"
 )
 
@@ -16,7 +15,7 @@ func NewStockService(model Model) *Service {
 }
 
 //Create new stock
-func (service *Service) Create(symbol string, price float64, company string, country uint) (map[string]interface{}, string, int) {
+func (service *Service) Create(symbol string, price float64, company string, country uint) (interface{}, string, int) {
 	_, err := service.Stock.GetBySymbol(symbol)
 	if err == nil {
 		return nil, "Symbol already exists", http.StatusBadRequest
@@ -27,45 +26,27 @@ func (service *Service) Create(symbol string, price float64, company string, cou
 		return nil, err.Error(), http.StatusBadRequest
 	}
 
-	resp := newStock.ToMap()
-	return resp, "", 0
+	return newStock, "", 0
 }
 
 //Get stock
-func (service *Service) Get(stockID uint) (map[string]interface{}, string, int) {
+func (service *Service) Get(stockID uint) (interface{}, string, int) {
 	stock, err := service.Stock.Get(stockID)
 	if err != nil {
-		return nil, "stock not found", http.StatusNotFound
+		return nil, err.Error(), http.StatusNotFound
 	}
 
-	resp := stock.ToMap()
-	return resp, "", 0
+	return stock, "", 0
 }
 
 //Update stock
 func (service *Service) Update(stockID uint, data map[string]interface{}) (bool, string, int) {
 	stock, err := service.Stock.Get(stockID)
 	if err != nil {
-		return false, "stock not found", http.StatusNotFound
+		return false, err.Error(), http.StatusNotFound
 	}
 
-	fmt.Println(data)
 	err = stock.Update(data)
-	if err != nil {
-		return false, err.Error(), http.StatusBadRequest
-	}
-
-	return true, "", 0
-}
-
-//Delete stock
-func (service *Service) Delete(stockID uint) (bool, string, int) {
-	stock, err := service.Stock.Get(stockID)
-	if err != nil {
-		return false, "stock not found", http.StatusNotFound
-	}
-
-	err = stock.Delete()
 	if err != nil {
 		return false, err.Error(), http.StatusBadRequest
 	}

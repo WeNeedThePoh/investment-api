@@ -16,9 +16,9 @@ func NewUserService(model Model) *Service {
 }
 
 //Create new user
-func (service *Service) Create(data map[string]interface{}) (map[string]interface{}, string, int) {
-	user := service.User.GetByEmail(data["email"].(string))
-	if user != nil {
+func (service *Service) Create(data map[string]interface{}) (interface{}, string, int) {
+	_, err := service.User.GetByEmail(data["email"].(string))
+	if err == nil {
 		return nil, "email already in use", http.StatusNotFound
 	}
 
@@ -27,30 +27,24 @@ func (service *Service) Create(data map[string]interface{}) (map[string]interfac
 		return nil, err.Error(), http.StatusBadRequest
 	}
 
-	resp := newUser.ToMap()
-	delete(resp, "password")
-	delete(resp, "password_reset")
-	return resp, "", 0
+	return newUser, "", 0
 }
 
 //Get user
-func (service *Service) Get(id uint) (map[string]interface{}, string, int) {
+func (service *Service) Get(id uint) (interface{}, string, int) {
 	user, err := service.User.Get(id)
 	if err != nil {
-		return nil, "user not found", http.StatusNotFound
+		return nil, err.Error(), http.StatusNotFound
 	}
 
-	resp := user.ToMap()
-	delete(resp, "password")
-	delete(resp, "password_reset")
-	return resp, "", 0
+	return user, "", 0
 }
 
 //Update user
 func (service *Service) Update(id uint, data map[string]interface{}) (bool, string, int) {
 	user, err := service.User.Get(id)
 	if err != nil {
-		return false, "user not found", http.StatusNotFound
+		return false, err.Error(), http.StatusNotFound
 	}
 
 	delete(data, "password")
@@ -68,7 +62,7 @@ func (service *Service) Update(id uint, data map[string]interface{}) (bool, stri
 func (service *Service) UpdatePassword(id uint, oldPassword string, password string) (bool, string, int) {
 	user, err := service.User.Get(id)
 	if err != nil {
-		return false, "user not found", http.StatusNotFound
+		return false, err.Error(), http.StatusNotFound
 	}
 
 	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(oldPassword))
@@ -88,7 +82,7 @@ func (service *Service) UpdatePassword(id uint, oldPassword string, password str
 func (service *Service) Delete(id uint) (bool, string, int) {
 	user, err := service.User.Get(id)
 	if err != nil {
-		return false, "user not found", http.StatusNotFound
+		return false, err.Error(), http.StatusNotFound
 	}
 
 	err = user.Delete()

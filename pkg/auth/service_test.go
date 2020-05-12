@@ -1,13 +1,14 @@
 package auth
 
 import (
+	"errors"
 	"investment-api/pkg/user"
 	"os"
 	"testing"
 )
 
 func TestUserNotFoundLogin(t *testing.T) {
-	var model = user.MockUserModel{User: nil}
+	var model = user.MockUserModel{User: &user.User{}, ErrorMessage: errors.New("user not found")}
 	service := NewAuthService(model)
 
 	_, _, code := service.Login("test@email.com", "password")

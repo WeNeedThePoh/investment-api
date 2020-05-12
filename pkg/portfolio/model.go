@@ -21,7 +21,7 @@ type Model interface {
 type Portfolio struct {
 	ID                    uint       `json:"id"`
 	Currency              uint       `json:"currency_id" gorm:"column:currency_id"`
-	UserID                uint       `json:"user_id" gorm:"column:user_id"`
+	UserID                uint       `json:"-" gorm:"column:user_id"`
 	Name                  string     `json:"name" gorm:"not null"`
 	Cost                  *float64   `json:"cost"`
 	MarketValue           *float64   `json:"market_value" gorm:"column:market_value"`
@@ -34,9 +34,9 @@ type Portfolio struct {
 	ExpectedDivYield      *float64   `json:"expected_div_yield" gorm:"column:expected_div_yield"`
 	ExpectedDiv           *float64   `json:"expected_div" gorm:"column:expected_div"`
 	DivCollected          *float64   `json:"div_collected" gorm:"column:div_collected"`
-	CreatedAt             time.Time  `json:"created_at"`
-	UpdatedAt             *time.Time `json:"updated_at"`
-	DeletedAt             *time.Time `json:"deleted_at"`
+	CreatedAt             time.Time  `json:"-"`
+	UpdatedAt             *time.Time `json:"-"`
+	DeletedAt             *time.Time `json:"-"`
 }
 
 //NewPortfolio instantiate new user model
@@ -72,7 +72,7 @@ func (portfolio *Portfolio) GetByName(userID uint, name string) (*Portfolio, err
 	return portfolio, nil
 }
 
-//Get get user's portfolio by ID
+//GetAll user's portfolios
 func (portfolio *Portfolio) GetAll(userID uint) ([]*Portfolio, error) {
 	var portfolios []*Portfolio
 

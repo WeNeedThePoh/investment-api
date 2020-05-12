@@ -9,7 +9,7 @@ import (
 )
 
 //GetStock Get a stock by symbol
-func GetStock(symbol string) (map[string]interface{}, error) {
+func GetStock(symbol string) (interface{}, error) {
 	url := getURL("GLOBAL_QUOTE")
 	resp, err := http.Get(url + "&symbol=" + symbol)
 	if err != nil {
@@ -21,7 +21,7 @@ func GetStock(symbol string) (map[string]interface{}, error) {
 }
 
 //SearchStock by a search term
-func SearchStock(keywords string) (map[string]interface{}, error) {
+func SearchStock(keywords string) (interface{}, error) {
 	url := getURL("SYMBOL_SEARCH")
 	resp, err := http.Get(url + "&keywords=" + keywords)
 	if err != nil {
@@ -38,7 +38,7 @@ func getURL(function string) string {
 	return mainURL + "?" + auth + "&function=" + function
 }
 
-func getBody(response *http.Response) (map[string]interface{}, error) {
+func getBody(response *http.Response) (interface{}, error) {
 	defer response.Body.Close()
 	body, err := ioutil.ReadAll(response.Body)
 	if err != nil {

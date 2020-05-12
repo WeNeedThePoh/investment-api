@@ -4,11 +4,17 @@ package portfolio
 type MockPortfolioModel struct {
 	Portfolio    *Portfolio
 	errorMessage error
+	Portfolios   []*Portfolio
 }
 
 //Create mock
 func (m MockPortfolioModel) Create(userID uint, name string) (*Portfolio, error) {
 	return m.Portfolio, m.errorMessage
+}
+
+//GetAll mock
+func (m MockPortfolioModel) GetAll(userID uint) ([]*Portfolio, error) {
+	return m.Portfolios, m.errorMessage
 }
 
 //Get mock

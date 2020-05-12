@@ -27,13 +27,13 @@ func NewAuthService(model u.Model) *Service {
 }
 
 //Login login user
-func (service *Service) Login(email string, password string) (map[string]interface{}, string, int) {
-	user := service.UserModel.GetByEmail(email)
-	if user == nil {
-		return nil, "user not found", http.StatusNotFound
+func (service *Service) Login(email string, password string) (interface{}, string, int) {
+	user, err := service.UserModel.GetByEmail(email)
+	if err != nil {
+		return nil, err.Error(), http.StatusNotFound
 	}
 
-	err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password))
+	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password))
 	if err != nil && err == bcrypt.ErrMismatchedHashAndPassword {
 		return nil, "Invalid login credentials", http.StatusUnauthorized
 	}

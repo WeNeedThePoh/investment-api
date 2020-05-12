@@ -17,7 +17,7 @@ func NewPortfolioService(model Model) *Service {
 }
 
 //Create new portfolio
-func (service *Service) Create(userID uint, name string) (map[string]interface{}, string, int) {
+func (service *Service) Create(userID uint, name string) (interface{}, string, int) {
 	portfolio, err := service.Portfolio.GetByName(userID, name)
 	if err == nil {
 		name = portfolio.Name + strconv.Itoa(rand.Intn(100))
@@ -28,8 +28,7 @@ func (service *Service) Create(userID uint, name string) (map[string]interface{}
 		return nil, err.Error(), http.StatusBadRequest
 	}
 
-	resp := newPortfolio.ToMap()
-	return resp, "", 0
+	return newPortfolio, "", 0
 }
 
 //GetAll user portfolios
@@ -43,14 +42,13 @@ func (service *Service) GetAll(userID uint) ([]*Portfolio, string, int) {
 }
 
 //Get user portfolio
-func (service *Service) Get(userID uint, portfolioID uint) (map[string]interface{}, string, int) {
+func (service *Service) Get(userID uint, portfolioID uint) (interface{}, string, int) {
 	portfolio, err := service.Portfolio.Get(userID, portfolioID)
 	if err != nil {
 		return nil, err.Error(), http.StatusNotFound
 	}
 
-	resp := portfolio.ToMap()
-	return resp, "", 0
+	return portfolio, "", 0
 }
 
 //Update portfolio

@@ -8,7 +8,7 @@ import (
 )
 
 //Success payload, all responses thar are 2xx
-func Success(w http.ResponseWriter, data map[string]interface{}, statusCode int) {
+func Success(w http.ResponseWriter, data interface{}, statusCode int) {
 	response := make(map[string]interface{})
 	if data != nil {
 		response = map[string]interface{}{"data": data}

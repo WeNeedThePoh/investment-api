@@ -9,9 +9,9 @@ import (
 
 //Get stock
 var Get = func(w http.ResponseWriter, r *http.Request) {
-	vars := mux.Vars(r)
+	symbol := mux.Vars(r)["symbol"]
 
-	stock, err := alphavantage.GetStock(vars["symbol"])
+	stock, err := alphavantage.GetStock(symbol)
 	if err != nil {
 		u.Fail(w, err.Error(), "", 400)
 	} else {
