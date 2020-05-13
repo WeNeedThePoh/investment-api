@@ -6,9 +6,9 @@ import (
 	"net/http"
 )
 
-//Create Create new portfolio
+//Create new transaction
 var Create = func(w http.ResponseWriter, r *http.Request) {
-	id := u.RetrieveIDParameter(r, "user_id")
+	portfolioID := u.RetrieveIDParameter(r, "portfolio_id")
 	data := make(map[string]interface{})
 	err := json.NewDecoder(r.Body).Decode(&data)
 	if err != nil {
@@ -16,51 +16,49 @@ var Create = func(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var model = NewPortfolio()
-	service := NewPortfolioService(model)
-	user, message, code := service.Create(id, data["name"].(string))
+	var model = NewTransaction()
+	service := NewTransactionService(model)
+	transaction, message, code := service.Create(portfolioID, data)
 
-	if user == nil {
+	if transaction == nil {
 		u.Fail(w, message, "", code)
 	} else {
-		u.Success(w, user, http.StatusCreated)
+		u.Success(w, transaction, http.StatusCreated)
 	}
 }
 
-//GetAll user portfolios
+//GetAll transactions
 var GetAll = func(w http.ResponseWriter, r *http.Request) {
-	id := u.RetrieveIDParameter(r, "user_id")
-	var model = NewPortfolio()
-	service := NewPortfolioService(model)
-
-	portfolios, message, code := service.GetAll(id)
-
-	if portfolios == nil {
-		u.Fail(w, message, "", code)
-	} else {
-		u.Success(w, portfolios, http.StatusOK)
-	}
-}
-
-//Get get user portfolio
-var Get = func(w http.ResponseWriter, r *http.Request) {
-	id := u.RetrieveIDParameter(r, "user_id")
 	portfolioID := u.RetrieveIDParameter(r, "portfolio_id")
-	var model = NewPortfolio()
-	service := NewPortfolioService(model)
+	var model = NewTransaction()
+	service := NewTransactionService(model)
 
-	portfolio, message, code := service.Get(id, portfolioID)
-	if portfolio == nil {
+	transactions, message, code := service.GetAll(portfolioID)
+
+	if transactions == nil {
 		u.Fail(w, message, "", code)
 	} else {
-		u.Success(w, portfolio, http.StatusOK)
+		u.Success(w, transactions, http.StatusOK)
 	}
 }
 
-//Update portfolio
+//Get transaction
+var Get = func(w http.ResponseWriter, r *http.Request) {
+	transactionID := u.RetrieveIDParameter(r, "transaction_id")
+	var model = NewTransaction()
+	service := NewTransactionService(model)
+
+	transaction, message, code := service.Get(transactionID)
+	if transaction == nil {
+		u.Fail(w, message, "", code)
+	} else {
+		u.Success(w, transaction, http.StatusOK)
+	}
+}
+
+//Update transaction
 var Update = func(w http.ResponseWriter, r *http.Request) {
-	userID := u.RetrieveIDParameter(r, "user_id")
-	id := u.RetrieveIDParameter(r, "portfolio_id")
+	transactionID := u.RetrieveIDParameter(r, "transaction_id")
 	data := make(map[string]interface{})
 
 	err := json.NewDecoder(r.Body).Decode(&data)
@@ -69,9 +67,9 @@ var Update = func(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var model = NewPortfolio()
-	service := NewPortfolioService(model)
-	updated, message, code := service.Update(userID, id, data)
+	var model = NewTransaction()
+	service := NewTransactionService(model)
+	updated, message, code := service.Update(transactionID, data)
 
 	if updated == false {
 		u.Fail(w, message, "", code)
@@ -80,14 +78,13 @@ var Update = func(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-//Delete portfolio
+//Delete transaction
 var Delete = func(w http.ResponseWriter, r *http.Request) {
-	id := u.RetrieveIDParameter(r, "user_id")
-	portfolioID := u.RetrieveIDParameter(r, "portfolio_id")
-	var model = NewPortfolio()
-	service := NewPortfolioService(model)
+	transactionID := u.RetrieveIDParameter(r, "transaction_id")
+	var model = NewTransaction()
+	service := NewTransactionService(model)
 
-	deleted, message, code := service.Delete(id, portfolioID)
+	deleted, message, code := service.Delete(transactionID)
 	if deleted == false {
 		u.Fail(w, message, "", code)
 	} else {

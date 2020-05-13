@@ -1,39 +1,38 @@
 package transaction
 
 import (
-	"math/rand"
 	"net/http"
-	"strconv"
 )
 
 //Service dependencies
 type Service struct {
-	Portfolio Model
+	Transaction Model
 }
 
-//NewPortfolioService service construct
-func NewPortfolioService(model Model) *Service {
-	return &Service{Portfolio: model}
+//NewTransactionService service construct
+func NewTransactionService(model Model) *Service {
+	return &Service{Transaction: model}
 }
 
-//Create new portfolio
-func (service *Service) Create(userID uint, name string) (interface{}, string, int) {
-	portfolio, err := service.Portfolio.GetByName(userID, name)
-	if err == nil {
-		name = portfolio.Name + strconv.Itoa(rand.Intn(100))
-	}
+//Create new transaction
+func (service *Service) Create(portfolioID uint, data map[string]interface{}) (interface{}, string, int) {
+	stockID := uint(data["stock_id"].(float64))
+	transactionType := data["type"].(string)
+	shares := data["shares"].(float64)
+	costPerShare := data["cost_per_share"].(float64)
+	fees := data["fees"].(float64)
 
-	newPortfolio, err := service.Portfolio.Create(userID, name)
+	newTransaction, err := service.Transaction.Create(portfolioID, stockID, transactionType, shares, costPerShare, fees)
 	if err != nil {
 		return nil, err.Error(), http.StatusBadRequest
 	}
 
-	return newPortfolio, "", 0
+	return newTransaction, "", 0
 }
 
-//GetAll user portfolios
-func (service *Service) GetAll(userID uint) ([]*Portfolio, string, int) {
-	portfolios, err := service.Portfolio.GetAll(userID)
+//GetAll portfolio transactions
+func (service *Service) GetAll(portfolioID uint) ([]*Transaction, string, int) {
+	portfolios, err := service.Transaction.GetAll(portfolioID)
 	if err != nil {
 		return nil, err.Error(), http.StatusNotFound
 	}
@@ -41,24 +40,24 @@ func (service *Service) GetAll(userID uint) ([]*Portfolio, string, int) {
 	return portfolios, "", 0
 }
 
-//Get user portfolio
-func (service *Service) Get(userID uint, portfolioID uint) (interface{}, string, int) {
-	portfolio, err := service.Portfolio.Get(userID, portfolioID)
+//Get transaction
+func (service *Service) Get(transactionID uint) (interface{}, string, int) {
+	transaction, err := service.Transaction.Get(transactionID)
 	if err != nil {
 		return nil, err.Error(), http.StatusNotFound
 	}
 
-	return portfolio, "", 0
+	return transaction, "", 0
 }
 
-//Update portfolio
-func (service *Service) Update(userID uint, id uint, data map[string]interface{}) (bool, string, int) {
-	portfolio, err := service.Portfolio.Get(userID, id)
+//Update transaction
+func (service *Service) Update(transactionID uint, data map[string]interface{}) (bool, string, int) {
+	transaction, err := service.Transaction.Get(transactionID)
 	if err != nil {
 		return false, err.Error(), http.StatusNotFound
 	}
 
-	err = portfolio.Update(data)
+	err = transaction.Update(data)
 	if err != nil {
 		return false, err.Error(), http.StatusBadRequest
 	}
@@ -66,14 +65,14 @@ func (service *Service) Update(userID uint, id uint, data map[string]interface{}
 	return true, "", 0
 }
 
-//Delete portfolio
-func (service *Service) Delete(userID uint, portfolioID uint) (bool, string, int) {
-	portfolio, err := service.Portfolio.Get(userID, portfolioID)
+//Delete transaction
+func (service *Service) Delete(transactionID uint) (bool, string, int) {
+	transaction, err := service.Transaction.Get(transactionID)
 	if err != nil {
 		return false, err.Error(), http.StatusNotFound
 	}
 
-	err = portfolio.Delete()
+	err = transaction.Delete()
 	if err != nil {
 		return false, err.Error(), http.StatusBadRequest
 	}

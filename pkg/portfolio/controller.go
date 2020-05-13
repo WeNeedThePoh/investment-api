@@ -18,12 +18,12 @@ var Create = func(w http.ResponseWriter, r *http.Request) {
 
 	var model = NewPortfolio()
 	service := NewPortfolioService(model)
-	user, message, code := service.Create(id, data["name"].(string))
+	portfolio, message, code := service.Create(id, data["name"].(string))
 
-	if user == nil {
+	if portfolio == nil {
 		u.Fail(w, message, "", code)
 	} else {
-		u.Success(w, user, http.StatusCreated)
+		u.Success(w, portfolio, http.StatusCreated)
 	}
 }
 

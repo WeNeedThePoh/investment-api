@@ -8,7 +8,7 @@ import (
 
 //Model interface
 type Model interface {
-	Create(PortfolioID uint, StockID uint, Type string, Shares *float64, CostPerShare *float64, Fees *float64) (*Transaction, error)
+	Create(PortfolioID uint, StockID uint, Type string, Shares float64, CostPerShare float64, Fees float64) (*Transaction, error)
 	GetAll(portfolioID uint) ([]*Transaction, error)
 	Get(transactionID uint) (*Transaction, error)
 	Update(data map[string]interface{}) error
@@ -21,13 +21,18 @@ type Transaction struct {
 	PortfolioID  uint       `json:"portfolio_id" gorm:"column:portfolio_id"`
 	StockID      uint       `json:"stock_id" gorm:"column:stock_id"`
 	Type         string     `json:"type" gorm:"not null"`
-	Shares       *float64   `json:"shares"`
-	Amount       *float64   `json:"amount"`
-	CostPerShare *float64   `json:"cost_per_share" gorm:"column:cost_per_share"`
-	Fees         *float64   `json:"fees" gorm:"default:0"`
+	Shares       float64    `json:"shares"`
+	Amount       float64    `json:"amount"`
+	CostPerShare float64    `json:"cost_per_share" gorm:"column:cost_per_share"`
+	Fees         float64    `json:"fees" gorm:"default:0"`
 	CreatedAt    time.Time  `json:"-"`
 	UpdatedAt    *time.Time `json:"-"`
 	DeletedAt    *time.Time `json:"-"`
+}
+
+//TableName for GORM
+func (Transaction) TableName() string {
+	return "portfolio_transactions"
 }
 
 //NewTransaction instantiate new transaction model
@@ -36,13 +41,14 @@ func NewTransaction() Model {
 }
 
 //Create a new transaction
-func (transaction *Transaction) Create(PortfolioID uint, StockID uint, Type string, Shares *float64, CostPerShare *float64, Fees *float64) (*Transaction, error) {
+func (transaction *Transaction) Create(PortfolioID uint, StockID uint, Type string, Shares float64, CostPerShare float64, Fees float64) (*Transaction, error) {
 	transaction.PortfolioID = PortfolioID
 	transaction.StockID = StockID
 	transaction.Type = Type
 	transaction.Shares = Shares
 	transaction.CostPerShare = CostPerShare
 	transaction.Fees = Fees
+	transaction.Amount = CostPerShare * Shares
 
 	err := utils.GetDB().Create(transaction).GetErrors()
 	if len(err) != 0 {

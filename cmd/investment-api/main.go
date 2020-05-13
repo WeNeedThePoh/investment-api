@@ -7,6 +7,7 @@ import (
 	"investment-api/pkg/auth"
 	"investment-api/pkg/portfolio"
 	"investment-api/pkg/stock"
+	"investment-api/pkg/transaction"
 	"investment-api/pkg/user"
 	"net/http"
 	"os"
@@ -35,6 +36,13 @@ func main() {
 	router.HandleFunc("/users/{user_id:[0-9]+}/portfolios/{portfolio_id:[0-9]+}", portfolio.Get).Methods("GET")
 	router.HandleFunc("/users/{user_id:[0-9]+}/portfolios/{portfolio_id:[0-9]+}", portfolio.Update).Methods("PATCH")
 	router.HandleFunc("/users/{user_id:[0-9]+}/portfolios/{portfolio_id:[0-9]+}", portfolio.Delete).Methods("DELETE")
+
+	//TRANSACTIONS
+	router.HandleFunc("/users/{user_id:[0-9]+}/portfolios/{portfolio_id:[0-9]+}/transactions", transaction.Create).Methods("POST")
+	router.HandleFunc("/users/{user_id:[0-9]+}/portfolios/{portfolio_id:[0-9]+}/transactions", transaction.GetAll).Methods("GET")
+	router.HandleFunc("/users/{user_id:[0-9]+}/portfolios/{portfolio_id:[0-9]+}/transactions/{transaction_id:[0-9]+}", transaction.Get).Methods("GET")
+	router.HandleFunc("/users/{user_id:[0-9]+}/portfolios/{portfolio_id:[0-9]+}/transactions/{transaction_id:[0-9]+}", transaction.Update).Methods("PATCH")
+	router.HandleFunc("/users/{user_id:[0-9]+}/portfolios/{portfolio_id:[0-9]+}/transactions/{transaction_id:[0-9]+}", transaction.Delete).Methods("DELETE")
 
 	//MIDDLEWARE
 	router.Use(middlewares.JwtAuthentication)
