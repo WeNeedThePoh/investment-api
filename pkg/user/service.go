@@ -15,7 +15,7 @@ func NewUserService(model Model) *Service {
 	return &Service{User: model}
 }
 
-//Create new user
+//Add new user
 func (service *Service) Create(data map[string]interface{}) (interface{}, string, int) {
 	_, err := service.User.GetByEmail(data["email"].(string))
 	if err == nil {

@@ -9,7 +9,7 @@ import (
 
 //Model interface
 type Model interface {
-	Create(symbol string, price float64, company string, country uint) (*Stock, error)
+	Add(symbol string, price float64, company string, country uint) (*Stock, error)
 	GetBySymbol(symbol string) (*Stock, error)
 	Get(stockID uint) (*Stock, error)
 	Update(data map[string]interface{}) error
@@ -40,8 +40,8 @@ func NewStock() Model {
 	return &Stock{}
 }
 
-//Create a new stock
-func (stock *Stock) Create(symbol string, price float64, company string, country uint) (*Stock, error) {
+//Add a new stock
+func (stock *Stock) Add(symbol string, price float64, company string, country uint) (*Stock, error) {
 	stock.Symbol = symbol
 	stock.Price = price
 	stock.CompanyName = company

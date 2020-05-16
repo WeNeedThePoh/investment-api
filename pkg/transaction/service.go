@@ -1,31 +1,37 @@
 package transaction
 
 import (
+	"fmt"
+	"investment-api/pkg/portfolioStock"
 	"net/http"
 )
 
 //Service dependencies
 type Service struct {
 	Transaction Model
+	PortfolioStock *portfolioStock.Service
 }
 
 //NewTransactionService service construct
-func NewTransactionService(model Model) *Service {
-	return &Service{Transaction: model}
+func NewTransactionService(model Model, portfolioStockService *portfolioStock.Service) *Service {
+	return &Service{Transaction: model, PortfolioStock: portfolioStockService}
 }
 
-//Create new transaction
+//Add new transaction
 func (service *Service) Create(portfolioID uint, data map[string]interface{}) (interface{}, string, int) {
-	stockID := uint(data["stock_id"].(float64))
+	symbol := data["symbol"].(string)
 	transactionType := data["type"].(string)
 	shares := data["shares"].(float64)
 	costPerShare := data["cost_per_share"].(float64)
 	fees := data["fees"].(float64)
 
-	newTransaction, err := service.Transaction.Create(portfolioID, stockID, transactionType, shares, costPerShare, fees)
+	newTransaction, err := service.Transaction.Create(portfolioID, symbol, transactionType, shares, costPerShare, fees)
 	if err != nil {
 		return nil, err.Error(), http.StatusBadRequest
 	}
+
+	_, message, _ := service.PortfolioStock.UpdateOrAdd(portfolioID, symbol, shares, costPerShare, "")
+	fmt.Println(message)
 
 	return newTransaction, "", 0
 }

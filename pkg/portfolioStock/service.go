@@ -1,4 +1,4 @@
-package transaction
+package portfolioStock
 
 import (
 	"net/http"
@@ -6,73 +6,68 @@ import (
 
 //Service dependencies
 type Service struct {
-	Transaction Model
+	PortfolioStock Model
 }
 
-//NewPortfolioStockService service construct
-func NewPortfolioStockService(model Model) *Service {
-	return &Service{Transaction: model}
+//NewService service construct
+func NewService(model Model) *Service {
+	return &Service{PortfolioStock: model}
 }
 
-//Create new transaction
-func (service *Service) Create(portfolioID uint, data map[string]interface{}) (interface{}, string, int) {
-	stockID := uint(data["stock_id"].(float64))
-	transactionType := data["type"].(string)
-	shares := data["shares"].(float64)
-	costPerShare := data["cost_per_share"].(float64)
-	fees := data["fees"].(float64)
-
-	newTransaction, err := service.Transaction.Create(portfolioID, stockID, transactionType, shares, costPerShare, fees)
+//Add stock to portfolio
+func (service *Service) Add(portfolioID uint, symbol string, shares float64, costPerShare float64, stockType string) (interface{}, string, int) {
+	newPortfolioStock, err := service.PortfolioStock.Add(portfolioID, symbol, stockType, shares, costPerShare)
 	if err != nil {
 		return nil, err.Error(), http.StatusBadRequest
 	}
 
-	return newTransaction, "", 0
+	return newPortfolioStock, "", 0
 }
 
-//GetAll portfolio transactions
-func (service *Service) GetAll(portfolioID uint) ([]*Transaction, string, int) {
-	portfolios, err := service.Transaction.GetAll(portfolioID)
+//GetAll portfolio stocks
+func (service *Service) GetAll(portfolioID uint) ([]*PortfolioStock, string, int) {
+	stocks, err := service.PortfolioStock.GetAll(portfolioID)
 	if err != nil {
 		return nil, err.Error(), http.StatusNotFound
 	}
 
-	return portfolios, "", 0
+	return stocks, "", 0
 }
 
-//Get transaction
-func (service *Service) Get(transactionID uint) (interface{}, string, int) {
-	transaction, err := service.Transaction.Get(transactionID)
+//Get portfolio stock
+func (service *Service) Get(symbol string, portfolioID uint) (interface{}, string, int) {
+	stock, err := service.PortfolioStock.Get(symbol, portfolioID)
 	if err != nil {
 		return nil, err.Error(), http.StatusNotFound
 	}
 
-	return transaction, "", 0
+	return stock, "", 0
 }
 
-//Update transaction
-func (service *Service) Update(transactionID uint, data map[string]interface{}) (bool, string, int) {
-	transaction, err := service.Transaction.Get(transactionID)
+//Update portfolio stock
+func (service *Service) UpdateOrAdd(portfolioID uint, symbol string, shares float64, costPerShare float64, stockType string) (interface{}, string, int) {
+	stock, err := service.PortfolioStock.Get(symbol, portfolioID)
+	if err != nil {
+		return service.Add(portfolioID, symbol, shares, costPerShare, stockType)
+	}
+
+	cost := shares * costPerShare
+	err = stock.Update(shares, cost, stockType)
+	if err != nil {
+		return nil, err.Error(), http.StatusBadRequest
+	}
+
+	return stock, "", 0
+}
+
+//Remove stock from portfolio
+func (service *Service) Remove(symbol string, portfolioID uint) (bool, string, int) {
+	stock, err := service.PortfolioStock.Get(symbol, portfolioID)
 	if err != nil {
 		return false, err.Error(), http.StatusNotFound
 	}
 
-	err = transaction.Update(data)
-	if err != nil {
-		return false, err.Error(), http.StatusBadRequest
-	}
-
-	return true, "", 0
-}
-
-//Delete transaction
-func (service *Service) Delete(transactionID uint) (bool, string, int) {
-	transaction, err := service.Transaction.Get(transactionID)
-	if err != nil {
-		return false, err.Error(), http.StatusNotFound
-	}
-
-	err = transaction.Delete()
+	err = stock.Remove()
 	if err != nil {
 		return false, err.Error(), http.StatusBadRequest
 	}

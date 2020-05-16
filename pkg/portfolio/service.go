@@ -16,7 +16,7 @@ func NewPortfolioService(model Model) *Service {
 	return &Service{Portfolio: model}
 }
 
-//Create new portfolio
+//Add new portfolio
 func (service *Service) Create(userID uint, name string) (interface{}, string, int) {
 	portfolio, err := service.Portfolio.GetByName(userID, name)
 	if err == nil {

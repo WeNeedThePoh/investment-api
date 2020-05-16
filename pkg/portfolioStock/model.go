@@ -1,4 +1,4 @@
-package transaction
+package portfolioStock
 
 import (
 	"errors"
@@ -8,18 +8,17 @@ import (
 
 //Model interface
 type Model interface {
-	Create(PortfolioID uint, StockID uint, Type string, Shares float64, CostPerShare float64) (*PortfolioStock, error)
+	Add(portfolioID uint, symbol string, stockType string, shares float64, costPerShare float64) (*PortfolioStock, error)
 	GetAll(portfolioID uint) ([]*PortfolioStock, error)
-	Get(portfolioStockID uint) (*PortfolioStock, error)
-	Update(Shares float64, AvgShareCost float64, Cost float64, Type string) error
-	Delete() error
+	Get(symbol string, portfolioID uint) (*PortfolioStock, error)
+	Update(shares float64, cost float64, stockType string) error
+	Remove() error
 }
 
 //PortfolioStock model
 type PortfolioStock struct {
-	ID                    uint       `json:"id"`
-	PortfolioID           uint       `json:"portfolio_id" gorm:"column:portfolio_id"`
-	StockID               uint       `json:"stock_id" gorm:"column:stock_id"`
+	PortfolioID           uint       `json:"portfolio_id" gorm:"primary_key;column:portfolio_id"`
+	Symbol                string     `json:"symbol" gorm:"primary_key"`
 	Type                  string     `json:"type" gorm:"not null"`
 	Shares                float64    `json:"shares"`
 	AvgShareCost          float64    `json:"avg_share_cost"`
@@ -49,14 +48,14 @@ func NewPortfolioStock() Model {
 	return &PortfolioStock{}
 }
 
-//Create a new portfolioStock
-func (portfolioStock *PortfolioStock) Create(PortfolioID uint, StockID uint, Type string, Shares float64, CostPerShare float64) (*PortfolioStock, error) {
-	portfolioStock.PortfolioID = PortfolioID
-	portfolioStock.StockID = StockID
-	portfolioStock.Type = Type
-	portfolioStock.Shares = Shares
-	portfolioStock.AvgShareCost = CostPerShare
-	portfolioStock.Cost = CostPerShare * Shares
+//Add a new portfolioStock
+func (portfolioStock *PortfolioStock) Add(portfolioID uint, symbol string, stockType string, shares float64, costPerShare float64) (*PortfolioStock, error) {
+	portfolioStock.PortfolioID = portfolioID
+	portfolioStock.Symbol = symbol
+	portfolioStock.Type = stockType
+	portfolioStock.Shares = shares
+	portfolioStock.AvgShareCost = costPerShare
+	portfolioStock.Cost = costPerShare * shares
 
 	err := utils.GetDB().Create(portfolioStock).GetErrors()
 	if len(err) != 0 {
@@ -79,23 +78,23 @@ func (portfolioStock *PortfolioStock) GetAll(portfolioID uint) ([]*PortfolioStoc
 }
 
 //Get portfolio stock
-func (portfolioStock *PortfolioStock) Get(portfolioStockID uint) (*PortfolioStock, error) {
-	err := utils.GetDB().Where("id = ?", portfolioStockID).First(portfolioStock).GetErrors()
+func (portfolioStock *PortfolioStock) Get(symbol string, portfolioID uint) (*PortfolioStock, error) {
+	err := utils.GetDB().Where("symbol = ?", symbol).Where("portfolio_id = ?", portfolioID).First(portfolioStock).GetErrors()
 	if len(err) != 0 {
-		return portfolioStock, errors.New("portfolio stock not found")
+		return nil, errors.New("portfolio stock not found")
 	}
 
 	return portfolioStock, nil
 }
 
 //Update portfolio stock
-func (portfolioStock *PortfolioStock) Update(Shares float64, AvgShareCost float64, Cost float64, Type string) error {
-	portfolioStock.Shares += Shares
-	portfolioStock.AvgShareCost = AvgShareCost
-	portfolioStock.Cost = Cost
+func (portfolioStock *PortfolioStock) Update(shares float64, cost float64, stockType string) error {
+	portfolioStock.Shares += shares
+	portfolioStock.Cost += cost
+	portfolioStock.AvgShareCost = portfolioStock.Cost / portfolioStock.Shares
 
-	if Type != "" {
-		portfolioStock.Type = Type
+	if stockType != "" {
+		portfolioStock.Type = stockType
 	}
 
 	errs := utils.GetDB().Save(portfolioStock).GetErrors()
@@ -106,8 +105,8 @@ func (portfolioStock *PortfolioStock) Update(Shares float64, AvgShareCost float6
 	return nil
 }
 
-//Delete portfolio stock
-func (portfolioStock *PortfolioStock) Delete() error {
+//Remove portfolio stock
+func (portfolioStock *PortfolioStock) Remove() error {
 	err := utils.GetDB().Delete(portfolioStock)
 	if err == nil {
 		return errors.New("something went wrong while deleting portfolio stock")

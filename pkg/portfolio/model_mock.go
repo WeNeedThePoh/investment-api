@@ -7,7 +7,7 @@ type MockPortfolioModel struct {
 	Portfolios   []*Portfolio
 }
 
-//Create mock
+//Add mock
 func (m MockPortfolioModel) Create(userID uint, name string) (*Portfolio, error) {
 	return m.Portfolio, m.errorMessage
 }

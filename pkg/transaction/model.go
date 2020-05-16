@@ -8,7 +8,7 @@ import (
 
 //Model interface
 type Model interface {
-	Create(PortfolioID uint, StockID uint, Type string, Shares float64, CostPerShare float64, Fees float64) (*Transaction, error)
+	Create(portfolioID uint, symbol string, transactionType string, shares float64, costPerShare float64, fees float64) (*Transaction, error)
 	GetAll(portfolioID uint) ([]*Transaction, error)
 	Get(transactionID uint) (*Transaction, error)
 	Update(data map[string]interface{}) error
@@ -19,7 +19,7 @@ type Model interface {
 type Transaction struct {
 	ID           uint       `json:"id"`
 	PortfolioID  uint       `json:"portfolio_id" gorm:"column:portfolio_id"`
-	StockID      uint       `json:"stock_id" gorm:"column:stock_id"`
+	Symbol      string       `json:"symbol"`
 	Type         string     `json:"type" gorm:"not null"`
 	Shares       float64    `json:"shares"`
 	Amount       float64    `json:"amount"`
@@ -40,15 +40,15 @@ func NewTransaction() Model {
 	return &Transaction{}
 }
 
-//Create a new transaction
-func (transaction *Transaction) Create(PortfolioID uint, StockID uint, Type string, Shares float64, CostPerShare float64, Fees float64) (*Transaction, error) {
-	transaction.PortfolioID = PortfolioID
-	transaction.StockID = StockID
-	transaction.Type = Type
-	transaction.Shares = Shares
-	transaction.CostPerShare = CostPerShare
-	transaction.Fees = Fees
-	transaction.Amount = CostPerShare * Shares
+//Add a new transaction
+func (transaction *Transaction) Create(portfolioID uint, symbol string, transactionType string, shares float64, costPerShare float64, fees float64) (*Transaction, error) {
+	transaction.PortfolioID = portfolioID
+	transaction.Symbol = symbol
+	transaction.Type = transactionType
+	transaction.Shares = shares
+	transaction.CostPerShare = costPerShare
+	transaction.Fees = fees
+	transaction.Amount = costPerShare * shares
 
 	err := utils.GetDB().Create(transaction).GetErrors()
 	if len(err) != 0 {

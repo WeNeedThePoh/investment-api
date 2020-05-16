@@ -14,14 +14,14 @@ func NewStockService(model Model) *Service {
 	return &Service{Stock: model}
 }
 
-//Create new stock
-func (service *Service) Create(symbol string, price float64, company string, country uint) (interface{}, string, int) {
+//Add new stock
+func (service *Service) Add(symbol string, price float64, company string, country uint) (interface{}, string, int) {
 	_, err := service.Stock.GetBySymbol(symbol)
 	if err == nil {
 		return nil, "Symbol already exists", http.StatusBadRequest
 	}
 
-	newStock, err := service.Stock.Create(symbol, price, company, country)
+	newStock, err := service.Stock.Add(symbol, price, company, country)
 	if err != nil {
 		return nil, err.Error(), http.StatusBadRequest
 	}
