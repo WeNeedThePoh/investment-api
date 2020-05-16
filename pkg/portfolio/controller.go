@@ -6,7 +6,7 @@ import (
 	"net/http"
 )
 
-//Add Add new portfolio
+//Create new portfolio
 var Create = func(w http.ResponseWriter, r *http.Request) {
 	id := u.RetrieveIDParameter(r, "user_id")
 	data := make(map[string]interface{})

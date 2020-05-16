@@ -7,7 +7,7 @@ import (
 	"net/http"
 )
 
-//Add new stock to portfolio
+//Create new stock to portfolio
 var Create = func(w http.ResponseWriter, r *http.Request) {
 	portfolioID := u.RetrieveIDParameter(r, "portfolio_id")
 	data := make(map[string]interface{})
@@ -17,8 +17,8 @@ var Create = func(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var portfolioStockModel = portfolioStock.NewPortfolioStock()
-	portfolioStockService := portfolioStock.NewService(portfolioStockModel)
+	var portfolioStockModel = portfoliostock.NewPortfolioStock()
+	portfolioStockService := portfoliostock.NewService(portfolioStockModel)
 
 	var model = NewTransaction()
 	service := NewTransactionService(model, portfolioStockService)
@@ -34,8 +34,8 @@ var Create = func(w http.ResponseWriter, r *http.Request) {
 //GetAll transactions
 var GetAll = func(w http.ResponseWriter, r *http.Request) {
 	portfolioID := u.RetrieveIDParameter(r, "portfolio_id")
-	var portfolioStockModel = portfolioStock.NewPortfolioStock()
-	portfolioStockService := portfolioStock.NewService(portfolioStockModel)
+	var portfolioStockModel = portfoliostock.NewPortfolioStock()
+	portfolioStockService := portfoliostock.NewService(portfolioStockModel)
 
 	var model = NewTransaction()
 	service := NewTransactionService(model, portfolioStockService)
@@ -52,8 +52,8 @@ var GetAll = func(w http.ResponseWriter, r *http.Request) {
 //Get transaction
 var Get = func(w http.ResponseWriter, r *http.Request) {
 	transactionID := u.RetrieveIDParameter(r, "transaction_id")
-	var portfolioStockModel = portfolioStock.NewPortfolioStock()
-	portfolioStockService := portfolioStock.NewService(portfolioStockModel)
+	var portfolioStockModel = portfoliostock.NewPortfolioStock()
+	portfolioStockService := portfoliostock.NewService(portfolioStockModel)
 
 	var model = NewTransaction()
 	service := NewTransactionService(model, portfolioStockService)
@@ -77,8 +77,8 @@ var Update = func(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var portfolioStockModel = portfolioStock.NewPortfolioStock()
-	portfolioStockService := portfolioStock.NewService(portfolioStockModel)
+	var portfolioStockModel = portfoliostock.NewPortfolioStock()
+	portfolioStockService := portfoliostock.NewService(portfolioStockModel)
 
 	var model = NewTransaction()
 	service := NewTransactionService(model, portfolioStockService)
@@ -94,8 +94,8 @@ var Update = func(w http.ResponseWriter, r *http.Request) {
 //Delete transaction
 var Delete = func(w http.ResponseWriter, r *http.Request) {
 	transactionID := u.RetrieveIDParameter(r, "transaction_id")
-	var portfolioStockModel = portfolioStock.NewPortfolioStock()
-	portfolioStockService := portfolioStock.NewService(portfolioStockModel)
+	var portfolioStockModel = portfoliostock.NewPortfolioStock()
+	portfolioStockService := portfoliostock.NewService(portfolioStockModel)
 
 	var model = NewTransaction()
 	service := NewTransactionService(model, portfolioStockService)

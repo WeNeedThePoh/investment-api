@@ -44,7 +44,7 @@ func NewPortfolio() Model {
 	return &Portfolio{}
 }
 
-//Add a new portfolio
+//Create a new portfolio
 func (portfolio *Portfolio) Create(userID uint, name string) (*Portfolio, error) {
 	portfolio.Name = name
 	portfolio.UserID = userID

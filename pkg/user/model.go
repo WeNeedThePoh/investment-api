@@ -41,7 +41,7 @@ func NewUser() Model {
 	return &User{}
 }
 
-//Add a new user
+//Create a new user
 func (user *User) Create(data map[string]interface{}) (*User, error) {
 	mapstructure.Decode(data, &user)
 	hashedPassword, _ := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)

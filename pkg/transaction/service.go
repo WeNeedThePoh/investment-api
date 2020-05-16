@@ -8,16 +8,16 @@ import (
 
 //Service dependencies
 type Service struct {
-	Transaction Model
-	PortfolioStock *portfolioStock.Service
+	Transaction    Model
+	PortfolioStock *portfoliostock.Service
 }
 
 //NewTransactionService service construct
-func NewTransactionService(model Model, portfolioStockService *portfolioStock.Service) *Service {
+func NewTransactionService(model Model, portfolioStockService *portfoliostock.Service) *Service {
 	return &Service{Transaction: model, PortfolioStock: portfolioStockService}
 }
 
-//Add new transaction
+//Create new transaction
 func (service *Service) Create(portfolioID uint, data map[string]interface{}) (interface{}, string, int) {
 	symbol := data["symbol"].(string)
 	transactionType := data["type"].(string)

@@ -1,4 +1,4 @@
-package portfolioStock
+package portfoliostock
 
 import (
 	"errors"

@@ -19,7 +19,7 @@ type Model interface {
 type Transaction struct {
 	ID           uint       `json:"id"`
 	PortfolioID  uint       `json:"portfolio_id" gorm:"column:portfolio_id"`
-	Symbol      string       `json:"symbol"`
+	Symbol       string     `json:"symbol"`
 	Type         string     `json:"type" gorm:"not null"`
 	Shares       float64    `json:"shares"`
 	Amount       float64    `json:"amount"`
@@ -40,7 +40,7 @@ func NewTransaction() Model {
 	return &Transaction{}
 }
 
-//Add a new transaction
+//Create a new transaction
 func (transaction *Transaction) Create(portfolioID uint, symbol string, transactionType string, shares float64, costPerShare float64, fees float64) (*Transaction, error) {
 	transaction.PortfolioID = portfolioID
 	transaction.Symbol = symbol

@@ -6,7 +6,7 @@ type MockUserModel struct {
 	ErrorMessage error
 }
 
-//Add mock
+//Create mock
 func (m MockUserModel) Create(data map[string]interface{}) (*User, error) {
 	return m.User, m.ErrorMessage
 }

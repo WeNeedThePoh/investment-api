@@ -6,7 +6,7 @@ import (
 	"net/http"
 )
 
-//Add Add new user
+//Create a new user
 var Create = func(w http.ResponseWriter, r *http.Request) {
 	data := make(map[string]interface{})
 	err := json.NewDecoder(r.Body).Decode(&data)

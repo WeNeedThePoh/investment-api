@@ -1,4 +1,4 @@
-package portfolioStock
+package portfoliostock
 
 import (
 	"net/http"
@@ -44,7 +44,7 @@ func (service *Service) Get(symbol string, portfolioID uint) (interface{}, strin
 	return stock, "", 0
 }
 
-//Update portfolio stock
+//UpdateOrAdd portfolio stock
 func (service *Service) UpdateOrAdd(portfolioID uint, symbol string, shares float64, costPerShare float64, stockType string) (interface{}, string, int) {
 	stock, err := service.PortfolioStock.Get(symbol, portfolioID)
 	if err != nil {
