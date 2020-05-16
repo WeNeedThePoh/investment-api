@@ -1,15 +1,13 @@
 {
   "data": [
     {
-      "id": 10,
       "portfolio_id": 1,
-      "stock": "AAPL",
+      "symbol": "AAPL",
       "type": "Buy",
       "shares": 5.312351,
       "cost_per_share": 260.54,
       "amount": 1384.0799,
-      "fees": 1.10,
-      "deleted": false
+      "fees": 1.10
     }
   ],
   "metadata": {

@@ -1,11 +1,8 @@
 type: object
 properties:
-  id:
-    type: integer
-    readOnly: true
   portfolio_id:
     type: integer
-  stock:
+  symbol:
     type: string
   type:
     type: string
@@ -19,13 +16,9 @@ properties:
   fees:
     type: float
     default: 0
-  deleted:
-    type: boolean
-    default: false
-    readOnly: true
 required:
   - portfolio_id
-  - stock
+  - symbol
   - type
   - shares
   - cost_per_share
