@@ -40,8 +40,8 @@ func (service *Service) Get(stockID uint) (interface{}, string, int) {
 }
 
 //Update stock
-func (service *Service) Update(stockID uint, data map[string]interface{}) (bool, string, int) {
-	stock, err := service.Stock.Get(stockID)
+func (service *Service) Update(symbol string, data map[string]interface{}) (bool, string, int) {
+	stock, err := service.Stock.GetBySymbol(symbol)
 	if err != nil {
 		return false, err.Error(), http.StatusNotFound
 	}
