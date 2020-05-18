@@ -30,8 +30,8 @@ func (service *Service) Add(symbol string, price float64, company string, countr
 }
 
 //Get stock
-func (service *Service) Get(stockID uint) (interface{}, string, int) {
-	stock, err := service.Stock.Get(stockID)
+func (service *Service) Get(symbol string) (interface{}, string, int) {
+	stock, err := service.Stock.GetBySymbol(symbol)
 	if err != nil {
 		return nil, err.Error(), http.StatusNotFound
 	}

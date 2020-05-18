@@ -1,7 +1,6 @@
 package transaction
 
 import (
-	"fmt"
 	"investment-api/pkg/portfolioStock"
 	"net/http"
 )
@@ -30,8 +29,7 @@ func (service *Service) Create(portfolioID uint, data map[string]interface{}) (i
 		return nil, err.Error(), http.StatusBadRequest
 	}
 
-	_, message, _ := service.PortfolioStock.UpdateOrAdd(portfolioID, symbol, shares, costPerShare, "")
-	fmt.Println(message)
+	_, _, _ = service.PortfolioStock.UpdateOrAdd(portfolioID, symbol, shares, costPerShare, "")
 
 	return newTransaction, "", 0
 }

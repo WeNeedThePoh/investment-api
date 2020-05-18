@@ -26,8 +26,8 @@ var Get = func(w http.ResponseWriter, r *http.Request) {
 	dailyChange, _ := strconv.ParseFloat(stockMap["09. change"].(string), 64)
 	dailyChangePercent, _ := strconv.ParseFloat(stockMap["10. change percent"].(string), 64)
 	data := map[string]interface{}{
-		"price": price,
-		"daily_change": dailyChange,
+		"price":                   price,
+		"daily_change":            dailyChange,
 		"daily_change_percentage": dailyChangePercent,
 	}
 	service.Update(symbol, data)

@@ -1,22 +1,39 @@
 package portfoliostock
 
 import (
+	"investment-api/pkg/stock"
 	"net/http"
 )
 
 //Service dependencies
 type Service struct {
 	PortfolioStock Model
+	Stock          stock.Model
 }
 
 //NewService service construct
-func NewService(model Model) *Service {
-	return &Service{PortfolioStock: model}
+func NewService(model Model, stock stock.Model) *Service {
+	return &Service{PortfolioStock: model, Stock: stock}
 }
 
 //Add stock to portfolio
 func (service *Service) Add(portfolioID uint, symbol string, shares float64, costPerShare float64, stockType string) (interface{}, string, int) {
-	newPortfolioStock, err := service.PortfolioStock.Add(portfolioID, symbol, stockType, shares, costPerShare)
+	stockToAdd, _ := service.Stock.GetBySymbol(symbol)
+	marketValue := stockToAdd.Price * shares
+
+	cost := shares * costPerShare
+	data := map[string]interface{}{
+		"portfolio_id":            portfolioID,
+		"symbol":                  symbol,
+		"type":                    stockType,
+		"shares":                  shares,
+		"avg_share_cost":          costPerShare,
+		"market_value":            marketValue,
+		"cost":                    cost,
+		"total_change":            marketValue - cost,
+		"total_change_percentage": (marketValue - cost) / marketValue * 100,
+	}
+	newPortfolioStock, err := service.PortfolioStock.Add(data)
 	if err != nil {
 		return nil, err.Error(), http.StatusBadRequest
 	}
@@ -36,12 +53,12 @@ func (service *Service) GetAll(portfolioID uint) ([]*PortfolioStock, string, int
 
 //Get portfolio stock
 func (service *Service) Get(symbol string, portfolioID uint) (interface{}, string, int) {
-	stock, err := service.PortfolioStock.Get(symbol, portfolioID)
+	portfolioStock, err := service.PortfolioStock.Get(symbol, portfolioID)
 	if err != nil {
 		return nil, err.Error(), http.StatusNotFound
 	}
 
-	return stock, "", 0
+	return portfolioStock, "", 0
 }
 
 //UpdateOrAdd portfolio stock
@@ -51,8 +68,23 @@ func (service *Service) UpdateOrAdd(portfolioID uint, symbol string, shares floa
 		return service.Add(portfolioID, symbol, shares, costPerShare, stockType)
 	}
 
-	cost := shares * costPerShare
-	err = stock.Update(shares, cost, stockType)
+	stockToAdd, _ := service.Stock.GetBySymbol(symbol)
+	marketValue := stockToAdd.Price * shares
+
+	cost := (shares * costPerShare) + stock.Cost
+	data := map[string]interface{}{
+		"portfolio_id":            portfolioID,
+		"symbol":                  symbol,
+		"type":                    stockType,
+		"shares":                  stock.Shares + shares,
+		"avg_share_cost":          costPerShare,
+		"market_value":            marketValue,
+		"cost":                    cost,
+		"total_change":            marketValue - cost,
+		"total_change_percentage": (marketValue - cost) / marketValue * 100,
+	}
+
+	err = stock.Update(data)
 	if err != nil {
 		return nil, err.Error(), http.StatusBadRequest
 	}

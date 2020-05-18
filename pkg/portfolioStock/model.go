@@ -2,16 +2,17 @@ package portfoliostock
 
 import (
 	"errors"
+	"github.com/mitchellh/mapstructure"
 	"investment-api/utils"
 	"time"
 )
 
 //Model interface
 type Model interface {
-	Add(portfolioID uint, symbol string, stockType string, shares float64, costPerShare float64) (*PortfolioStock, error)
+	Add(data map[string]interface{}) (*PortfolioStock, error)
 	GetAll(portfolioID uint) ([]*PortfolioStock, error)
 	Get(symbol string, portfolioID uint) (*PortfolioStock, error)
-	Update(shares float64, cost float64, stockType string) error
+	Update(data map[string]interface{}) error
 	Remove() error
 }
 
@@ -49,14 +50,8 @@ func NewPortfolioStock() Model {
 }
 
 //Add a new portfolioStock
-func (portfolioStock *PortfolioStock) Add(portfolioID uint, symbol string, stockType string, shares float64, costPerShare float64) (*PortfolioStock, error) {
-	portfolioStock.PortfolioID = portfolioID
-	portfolioStock.Symbol = symbol
-	portfolioStock.Type = stockType
-	portfolioStock.Shares = shares
-	portfolioStock.AvgShareCost = costPerShare
-	portfolioStock.Cost = costPerShare * shares
-
+func (portfolioStock *PortfolioStock) Add(data map[string]interface{}) (*PortfolioStock, error) {
+	mapstructure.Decode(data, &portfolioStock)
 	err := utils.GetDB().Create(portfolioStock).GetErrors()
 	if len(err) != 0 {
 		return nil, errors.New("something wrong happened while adding stock to portfolio")
@@ -88,16 +83,8 @@ func (portfolioStock *PortfolioStock) Get(symbol string, portfolioID uint) (*Por
 }
 
 //Update portfolio stock
-func (portfolioStock *PortfolioStock) Update(shares float64, cost float64, stockType string) error {
-	portfolioStock.Shares += shares
-	portfolioStock.Cost += cost
-	portfolioStock.AvgShareCost = portfolioStock.Cost / portfolioStock.Shares
-
-	if stockType != "" {
-		portfolioStock.Type = stockType
-	}
-
-	errs := utils.GetDB().Save(portfolioStock).GetErrors()
+func (portfolioStock *PortfolioStock) Update(data map[string]interface{}) error {
+	errs := utils.GetDB().Model(portfolioStock).Update(data).GetErrors()
 	if len(errs) != 0 {
 		return errors.New("something went wrong while updating portfolio stock")
 	}
