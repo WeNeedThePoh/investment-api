@@ -29,7 +29,7 @@ func (service *Service) Create(portfolioID uint, data map[string]interface{}) (i
 		return nil, err.Error(), http.StatusBadRequest
 	}
 
-	_, _, _ = service.PortfolioStock.UpdateOrAdd(portfolioID, symbol, shares, costPerShare, "")
+	_, _, _ = service.PortfolioStock.UpdateOrAdd(portfolioID, symbol, shares, costPerShare, "", transactionType)
 
 	return newTransaction, "", 0
 }
@@ -80,6 +80,15 @@ func (service *Service) Delete(transactionID uint) (bool, string, int) {
 	if err != nil {
 		return false, err.Error(), http.StatusBadRequest
 	}
+
+	_, _, _ = service.PortfolioStock.UpdateOrAdd(
+		transaction.PortfolioID,
+		transaction.Symbol,
+		transaction.Shares,
+		transaction.CostPerShare,
+		"",
+		"remove",
+		)
 
 	return true, "", 0
 }

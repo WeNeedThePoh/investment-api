@@ -2,6 +2,7 @@ package portfoliostock
 
 import (
 	"investment-api/pkg/stock"
+	"math"
 	"net/http"
 )
 
@@ -20,19 +21,20 @@ func NewService(model Model, stock stock.Model) *Service {
 func (service *Service) Add(portfolioID uint, symbol string, shares float64, costPerShare float64, stockType string) (interface{}, string, int) {
 	stockToAdd, _ := service.Stock.GetBySymbol(symbol)
 	marketValue := stockToAdd.Price * shares
-
 	cost := shares * costPerShare
+
 	data := map[string]interface{}{
-		"portfolio_id":            portfolioID,
-		"symbol":                  symbol,
-		"type":                    stockType,
-		"shares":                  shares,
-		"avg_share_cost":          costPerShare,
-		"market_value":            marketValue,
-		"cost":                    cost,
-		"total_change":            marketValue - cost,
-		"total_change_percentage": (marketValue - cost) / marketValue * 100,
+		"PortfolioId":            portfolioID,
+		"Symbol":                  symbol,
+		"Type":                    stockType,
+		"Shares":                  shares,
+		"AvgShareCost":          costPerShare,
+		"MarketValue":             math.Round(marketValue),
+		"Cost":                    math.Round(cost),
+		"TotalChange":            math.Round(marketValue - cost),
+		"TotalChangePercentage": math.Round((marketValue - cost) / marketValue * 100),
 	}
+
 	newPortfolioStock, err := service.PortfolioStock.Add(data)
 	if err != nil {
 		return nil, err.Error(), http.StatusBadRequest
@@ -62,26 +64,34 @@ func (service *Service) Get(symbol string, portfolioID uint) (interface{}, strin
 }
 
 //UpdateOrAdd portfolio stock
-func (service *Service) UpdateOrAdd(portfolioID uint, symbol string, shares float64, costPerShare float64, stockType string) (interface{}, string, int) {
+func (service *Service) UpdateOrAdd(portfolioID uint, symbol string, shares float64, costPerShare float64, stockType string, action string) (interface{}, string, int) {
 	stock, err := service.PortfolioStock.Get(symbol, portfolioID)
 	if err != nil {
 		return service.Add(portfolioID, symbol, shares, costPerShare, stockType)
 	}
 
 	stockToAdd, _ := service.Stock.GetBySymbol(symbol)
+	cost := 0.0
+	if action == "sell" || action == "remove" {
+		shares = stock.Shares - shares
+		cost = shares * costPerShare
+	} else {
+		shares = stock.Shares + shares
+		cost = shares * costPerShare
+	}
+
 	marketValue := stockToAdd.Price * shares
 
-	cost := (shares * costPerShare) + stock.Cost
-	data := map[string]interface{}{
+	data := map[string]interface{} {
 		"portfolio_id":            portfolioID,
 		"symbol":                  symbol,
 		"type":                    stockType,
-		"shares":                  stock.Shares + shares,
+		"shares":                  shares,
 		"avg_share_cost":          costPerShare,
-		"market_value":            marketValue,
-		"cost":                    cost,
-		"total_change":            marketValue - cost,
-		"total_change_percentage": (marketValue - cost) / marketValue * 100,
+		"market_value":            math.Round(marketValue),
+		"cost":                    math.Round(cost),
+		"total_change":            math.Round(marketValue - cost),
+		"total_change_percentage": math.Round((marketValue - cost) / marketValue * 100),
 	}
 
 	err = stock.Update(data)
