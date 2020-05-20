@@ -24,14 +24,14 @@ func (service *Service) Add(portfolioID uint, symbol string, shares float64, cos
 	cost := shares * costPerShare
 
 	data := map[string]interface{}{
-		"PortfolioId":            portfolioID,
-		"Symbol":                  symbol,
-		"Type":                    stockType,
-		"Shares":                  shares,
+		"PortfolioId":           portfolioID,
+		"Symbol":                symbol,
+		"Type":                  stockType,
+		"Shares":                shares,
 		"AvgShareCost":          costPerShare,
-		"MarketValue":             math.Round(marketValue),
-		"Cost":                    math.Round(cost),
-		"TotalChange":            math.Round(marketValue - cost),
+		"MarketValue":           math.Round(marketValue),
+		"Cost":                  math.Round(cost),
+		"TotalChange":           math.Round(marketValue - cost),
 		"TotalChangePercentage": math.Round((marketValue - cost) / marketValue * 100),
 	}
 
@@ -82,7 +82,7 @@ func (service *Service) UpdateOrAdd(portfolioID uint, symbol string, shares floa
 
 	marketValue := stockToAdd.Price * shares
 
-	data := map[string]interface{} {
+	data := map[string]interface{}{
 		"portfolio_id":            portfolioID,
 		"symbol":                  symbol,
 		"type":                    stockType,

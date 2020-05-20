@@ -2,13 +2,14 @@ package auth
 
 import (
 	"encoding/json"
+	"github.com/julienschmidt/httprouter"
 	"investment-api/pkg/user"
 	u "investment-api/utils"
 	"net/http"
 )
 
 //Authenticate Login user
-var Authenticate = func(w http.ResponseWriter, r *http.Request) {
+var Authenticate = func(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	data := make(map[string]string)
 
 	err := json.NewDecoder(r.Body).Decode(&data)

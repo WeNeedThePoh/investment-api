@@ -2,12 +2,13 @@ package user
 
 import (
 	"encoding/json"
+	"github.com/julienschmidt/httprouter"
 	u "investment-api/utils"
 	"net/http"
 )
 
 //Create a new user
-var Create = func(w http.ResponseWriter, r *http.Request) {
+var Create = func(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
 	data := make(map[string]interface{})
 	err := json.NewDecoder(r.Body).Decode(&data)
 	if err != nil {
@@ -27,8 +28,8 @@ var Create = func(w http.ResponseWriter, r *http.Request) {
 }
 
 //Get get user
-var Get = func(w http.ResponseWriter, r *http.Request) {
-	id := u.RetrieveIDParameter(r, "user_id")
+var Get = func(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
+	id := u.RetrieveIDParameter(params, "user_id")
 	var model = NewUser()
 	service := NewUserService(model)
 
@@ -41,8 +42,8 @@ var Get = func(w http.ResponseWriter, r *http.Request) {
 }
 
 //Update update user
-var Update = func(w http.ResponseWriter, r *http.Request) {
-	id := u.RetrieveIDParameter(r, "user_id")
+var Update = func(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
+	id := u.RetrieveIDParameter(params, "user_id")
 	data := make(map[string]interface{})
 
 	err := json.NewDecoder(r.Body).Decode(&data)
@@ -63,8 +64,8 @@ var Update = func(w http.ResponseWriter, r *http.Request) {
 }
 
 //UpdatePassword update user password
-var UpdatePassword = func(w http.ResponseWriter, r *http.Request) {
-	id := u.RetrieveIDParameter(r, "user_id")
+var UpdatePassword = func(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
+	id := u.RetrieveIDParameter(params, "user_id")
 	data := make(map[string]string)
 
 	err := json.NewDecoder(r.Body).Decode(&data)
@@ -85,8 +86,8 @@ var UpdatePassword = func(w http.ResponseWriter, r *http.Request) {
 }
 
 //Delete delete user
-var Delete = func(w http.ResponseWriter, r *http.Request) {
-	id := u.RetrieveIDParameter(r, "user_id")
+var Delete = func(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
+	id := u.RetrieveIDParameter(params, "user_id")
 	var model = NewUser()
 	service := NewUserService(model)
 

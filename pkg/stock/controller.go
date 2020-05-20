@@ -1,7 +1,7 @@
 package stock
 
 import (
-	"github.com/gorilla/mux"
+	"github.com/julienschmidt/httprouter"
 	"investment-api/external/alphavantage"
 	u "investment-api/utils"
 	"net/http"
@@ -9,8 +9,8 @@ import (
 )
 
 //Get stock
-var Get = func(w http.ResponseWriter, r *http.Request) {
-	symbol := mux.Vars(r)["symbol"]
+var Get = func(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
+	symbol := params.ByName("symbol")
 
 	stock, err := alphavantage.GetStock(symbol)
 	if err != nil {
@@ -36,7 +36,7 @@ var Get = func(w http.ResponseWriter, r *http.Request) {
 }
 
 //Search stock symbol
-var Search = func(w http.ResponseWriter, r *http.Request) {
+var Search = func(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
 	searchTerm := r.URL.Query().Get("search")
 	if searchTerm == "" {
 		u.Fail(w, "Provide a search term", "", 400)

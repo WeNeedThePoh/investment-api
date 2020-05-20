@@ -2,6 +2,7 @@ package transaction
 
 import (
 	"encoding/json"
+	"github.com/julienschmidt/httprouter"
 	"investment-api/pkg/portfolioStock"
 	"investment-api/pkg/stock"
 	u "investment-api/utils"
@@ -9,8 +10,8 @@ import (
 )
 
 //Create new stock to portfolio
-var Create = func(w http.ResponseWriter, r *http.Request) {
-	portfolioID := u.RetrieveIDParameter(r, "portfolio_id")
+var Create = func(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
+	portfolioID := u.RetrieveIDParameter(params, "portfolio_id")
 	data := make(map[string]interface{})
 	err := json.NewDecoder(r.Body).Decode(&data)
 	if err != nil {
@@ -34,8 +35,8 @@ var Create = func(w http.ResponseWriter, r *http.Request) {
 }
 
 //GetAll transactions
-var GetAll = func(w http.ResponseWriter, r *http.Request) {
-	portfolioID := u.RetrieveIDParameter(r, "portfolio_id")
+var GetAll = func(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
+	portfolioID := u.RetrieveIDParameter(params, "portfolio_id")
 	var portfolioStockModel = portfoliostock.NewPortfolioStock()
 	var stockModel = stock.NewStock()
 	portfolioStockService := portfoliostock.NewService(portfolioStockModel, stockModel)
@@ -53,8 +54,8 @@ var GetAll = func(w http.ResponseWriter, r *http.Request) {
 }
 
 //Get transaction
-var Get = func(w http.ResponseWriter, r *http.Request) {
-	transactionID := u.RetrieveIDParameter(r, "transaction_id")
+var Get = func(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
+	transactionID := u.RetrieveIDParameter(params, "transaction_id")
 	var portfolioStockModel = portfoliostock.NewPortfolioStock()
 	var stockModel = stock.NewStock()
 	portfolioStockService := portfoliostock.NewService(portfolioStockModel, stockModel)
@@ -71,8 +72,8 @@ var Get = func(w http.ResponseWriter, r *http.Request) {
 }
 
 //Update transaction
-var Update = func(w http.ResponseWriter, r *http.Request) {
-	transactionID := u.RetrieveIDParameter(r, "transaction_id")
+var Update = func(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
+	transactionID := u.RetrieveIDParameter(params, "transaction_id")
 	data := make(map[string]interface{})
 
 	err := json.NewDecoder(r.Body).Decode(&data)
@@ -97,8 +98,8 @@ var Update = func(w http.ResponseWriter, r *http.Request) {
 }
 
 //Delete transaction
-var Delete = func(w http.ResponseWriter, r *http.Request) {
-	transactionID := u.RetrieveIDParameter(r, "transaction_id")
+var Delete = func(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
+	transactionID := u.RetrieveIDParameter(params, "transaction_id")
 	var portfolioStockModel = portfoliostock.NewPortfolioStock()
 	var stockModel = stock.NewStock()
 	portfolioStockService := portfoliostock.NewService(portfolioStockModel, stockModel)

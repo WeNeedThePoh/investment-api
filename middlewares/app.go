@@ -3,7 +3,7 @@ package middlewares
 import (
 	"context"
 	jwt "github.com/dgrijalva/jwt-go"
-	"github.com/gorilla/mux"
+	"github.com/julienschmidt/httprouter"
 	"investment-api/pkg/auth"
 	u "investment-api/utils"
 	"net/http"
@@ -20,16 +20,15 @@ const (
 )
 
 //JwtAuthentication JWT middleware
-var JwtAuthentication = func(next http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-
+var JwtAuthentication = func(h httprouter.Handle) httprouter.Handle {
+	return func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		notAuth := []string{"/users", "/login"}
 		requestPath := r.URL.Path
 
 		//check if request does not need authentication, serve the request if it doesn't need it
 		for _, value := range notAuth {
 			if value == requestPath {
-				next.ServeHTTP(w, r)
+				h(w, r, ps)
 				return
 			}
 		}
@@ -58,20 +57,19 @@ var JwtAuthentication = func(next http.Handler) http.Handler {
 			return
 		}
 
-		vars := mux.Vars(r)
-		userID, err := strconv.ParseInt(vars["user_id"], 10, 64)
-		if err != nil && vars["user_id"] != "" {
+		userID, err := strconv.ParseInt(ps.ByName("user_id"), 10, 64)
+		if err != nil && ps.ByName("user_id") != "" {
 			u.Fail(w, "Request parameter not found", "", http.StatusBadRequest)
 			return
 		}
 
-		if tk.UserID != uint(userID) && vars["user_id"] != "" {
+		if tk.UserID != uint(userID) && ps.ByName("user_id") != "" {
 			u.Fail(w, "Request user id didn't match token user id", "", http.StatusUnauthorized)
 			return
 		}
 
 		ctx := context.WithValue(r.Context(), KeyUser, tk.UserID)
 		r = r.WithContext(ctx)
-		next.ServeHTTP(w, r)
-	})
+		h(w, r, ps)
+	}
 }

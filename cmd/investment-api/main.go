@@ -2,8 +2,8 @@ package main
 
 import (
 	"fmt"
-	"github.com/gorilla/mux"
-	"investment-api/middlewares"
+	"github.com/julienschmidt/httprouter"
+	m "investment-api/middlewares"
 	"investment-api/pkg/auth"
 	"investment-api/pkg/portfolio"
 	"investment-api/pkg/stock"
@@ -14,39 +14,38 @@ import (
 )
 
 func main() {
-	router := mux.NewRouter()
+	router := httprouter.New()
 
 	//AUTH
-	router.HandleFunc("/login", auth.Authenticate).Methods("POST")
+	router.POST("/login", auth.Authenticate)
 
 	//USERS
-	router.HandleFunc("/users", user.Create).Methods("POST")
-	router.HandleFunc("/users/{user_id:[0-9]+}", user.Get).Methods("GET")
-	router.HandleFunc("/users/{user_id:[0-9]+}", user.Update).Methods("PATCH")
-	router.HandleFunc("/users/{user_id:[0-9]+}/password", user.UpdatePassword).Methods("PATCH")
-	router.HandleFunc("/users/{user_id:[0-9]+}", user.Delete).Methods("DELETE")
+	router.POST("/users", m.JwtAuthentication(user.Create))
+	router.GET("/users/:user_id", m.JwtAuthentication(user.Get))
+	router.PATCH("/users/:user_id", m.JwtAuthentication(user.Update))
+	router.PATCH("/users/:user_id/password", m.JwtAuthentication(user.UpdatePassword))
+	router.DELETE("/users/:user_id", m.JwtAuthentication(user.Delete))
 
 	//STOCKS
-	router.HandleFunc("/stocks", stock.Search).Methods("GET")
-	router.HandleFunc("/stocks/{symbol}", stock.Get).Methods("GET")
+	router.GET("/stocks", m.JwtAuthentication(stock.Search))
+	router.GET("/stocks/:symbol", m.JwtAuthentication(stock.Get))
 
 	//PORTFOLIOS
-	router.HandleFunc("/users/{user_id:[0-9]+}/portfolios", portfolio.Create).Methods("POST")
-	router.HandleFunc("/users/{user_id:[0-9]+}/portfolios", portfolio.GetAll).Methods("GET")
-	router.HandleFunc("/users/{user_id:[0-9]+}/portfolios/{portfolio_id:[0-9]+}", portfolio.Get).Methods("GET")
-	router.HandleFunc("/users/{user_id:[0-9]+}/portfolios/{portfolio_id:[0-9]+}", portfolio.Update).Methods("PATCH")
-	router.HandleFunc("/users/{user_id:[0-9]+}/portfolios/{portfolio_id:[0-9]+}", portfolio.Delete).Methods("DELETE")
+	router.POST("/users/:user_id/portfolios", m.JwtAuthentication(portfolio.Create))
+	router.GET("/users/:user_id/portfolios", m.JwtAuthentication(portfolio.GetAll))
+	router.GET("/users/:user_id/portfolios/:portfolio_id", m.JwtAuthentication(portfolio.Get))
+	router.PATCH("/users/:user_id/portfolios/:portfolio_id", m.JwtAuthentication(portfolio.Update))
+	router.DELETE("/users/:user_id/portfolios/:portfolio_id", m.JwtAuthentication(portfolio.Delete))
 
 	//TRANSACTIONS
-	router.HandleFunc("/users/{user_id:[0-9]+}/portfolios/{portfolio_id:[0-9]+}/transactions", transaction.Create).Methods("POST")
-	router.HandleFunc("/users/{user_id:[0-9]+}/portfolios/{portfolio_id:[0-9]+}/transactions", transaction.GetAll).Methods("GET")
-	router.HandleFunc("/users/{user_id:[0-9]+}/portfolios/{portfolio_id:[0-9]+}/transactions/{transaction_id:[0-9]+}", transaction.Get).Methods("GET")
-	router.HandleFunc("/users/{user_id:[0-9]+}/portfolios/{portfolio_id:[0-9]+}/transactions/{transaction_id:[0-9]+}", transaction.Update).Methods("PATCH")
-	router.HandleFunc("/users/{user_id:[0-9]+}/portfolios/{portfolio_id:[0-9]+}/transactions/{transaction_id:[0-9]+}", transaction.Delete).Methods("DELETE")
+	router.POST("/users/:user_id/portfolios/:portfolio_id/transactions", m.JwtAuthentication(transaction.Create))
+	router.GET("/users/:user_id/portfolios/:portfolio_id/transactions", m.JwtAuthentication(transaction.GetAll))
+	router.GET("/users/:user_id/portfolios/:portfolio_id/transactions/:transaction_id", m.JwtAuthentication(transaction.Get))
+	router.PATCH("/users/:user_id/portfolios/:portfolio_id/transactions/:transaction_id", m.JwtAuthentication(transaction.Update))
+	router.DELETE("/users/:user_id/portfolios/:portfolio_id/transactions/:transaction_id", m.JwtAuthentication(transaction.Delete))
 
 	//MIDDLEWARE
-	router.Use(middlewares.JwtAuthentication)
-	router.NotFoundHandler = middlewares.NotFoundHandler()
+	router.NotFound = m.NotFoundHandler()
 
 	port := os.Getenv("PORT")
 	if port == "" {

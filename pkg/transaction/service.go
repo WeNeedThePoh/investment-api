@@ -88,7 +88,7 @@ func (service *Service) Delete(transactionID uint) (bool, string, int) {
 		transaction.CostPerShare,
 		"",
 		"remove",
-		)
+	)
 
 	return true, "", 0
 }

@@ -2,13 +2,14 @@ package portfolio
 
 import (
 	"encoding/json"
+	"github.com/julienschmidt/httprouter"
 	u "investment-api/utils"
 	"net/http"
 )
 
 //Create new portfolio
-var Create = func(w http.ResponseWriter, r *http.Request) {
-	id := u.RetrieveIDParameter(r, "user_id")
+var Create = func(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
+	id := u.RetrieveIDParameter(params, "user_id")
 	data := make(map[string]interface{})
 	err := json.NewDecoder(r.Body).Decode(&data)
 	if err != nil {
@@ -28,8 +29,8 @@ var Create = func(w http.ResponseWriter, r *http.Request) {
 }
 
 //GetAll user portfolios
-var GetAll = func(w http.ResponseWriter, r *http.Request) {
-	id := u.RetrieveIDParameter(r, "user_id")
+var GetAll = func(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
+	id := u.RetrieveIDParameter(params, "user_id")
 	var model = NewPortfolio()
 	service := NewPortfolioService(model)
 
@@ -43,9 +44,9 @@ var GetAll = func(w http.ResponseWriter, r *http.Request) {
 }
 
 //Get get user portfolio
-var Get = func(w http.ResponseWriter, r *http.Request) {
-	id := u.RetrieveIDParameter(r, "user_id")
-	portfolioID := u.RetrieveIDParameter(r, "portfolio_id")
+var Get = func(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
+	id := u.RetrieveIDParameter(params, "user_id")
+	portfolioID := u.RetrieveIDParameter(params, "portfolio_id")
 	var model = NewPortfolio()
 	service := NewPortfolioService(model)
 
@@ -58,9 +59,9 @@ var Get = func(w http.ResponseWriter, r *http.Request) {
 }
 
 //Update portfolio
-var Update = func(w http.ResponseWriter, r *http.Request) {
-	userID := u.RetrieveIDParameter(r, "user_id")
-	id := u.RetrieveIDParameter(r, "portfolio_id")
+var Update = func(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
+	userID := u.RetrieveIDParameter(params, "user_id")
+	id := u.RetrieveIDParameter(params, "portfolio_id")
 	data := make(map[string]interface{})
 
 	err := json.NewDecoder(r.Body).Decode(&data)
@@ -81,9 +82,9 @@ var Update = func(w http.ResponseWriter, r *http.Request) {
 }
 
 //Delete portfolio
-var Delete = func(w http.ResponseWriter, r *http.Request) {
-	id := u.RetrieveIDParameter(r, "user_id")
-	portfolioID := u.RetrieveIDParameter(r, "portfolio_id")
+var Delete = func(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
+	id := u.RetrieveIDParameter(params, "user_id")
+	portfolioID := u.RetrieveIDParameter(params, "portfolio_id")
 	var model = NewPortfolio()
 	service := NewPortfolioService(model)
 
