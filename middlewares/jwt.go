@@ -22,17 +22,6 @@ const (
 //JwtAuthentication JWT middleware
 var JwtAuthentication = func(h httprouter.Handle) httprouter.Handle {
 	return func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-		notAuth := []string{"/users", "/login"}
-		requestPath := r.URL.Path
-
-		//check if request does not need authentication, serve the request if it doesn't need it
-		for _, value := range notAuth {
-			if value == requestPath {
-				h(w, r, ps)
-				return
-			}
-		}
-
 		tokenHeader := r.Header.Get("Authorization")
 		if tokenHeader == "" {
 			u.Fail(w, "Missing auth token", "", http.StatusForbidden)
