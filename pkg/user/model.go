@@ -30,7 +30,7 @@ type User struct {
 	LastName      *string    `json:"last_name" gorm:"size:40"`
 	Password      string     `json:"-" gorm:"size:255;not null"`
 	PasswordReset *string    `json:"-" gorm:"size:255"`
-	Active        bool       `json:"active"`
+	Active        bool       `json:"-"`
 	CreatedAt     time.Time  `json:"-"`
 	UpdatedAt     *time.Time `json:"-"`
 	DeletedAt     *time.Time `json:"-"`

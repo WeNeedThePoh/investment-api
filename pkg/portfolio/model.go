@@ -35,7 +35,7 @@ type Portfolio struct {
 	ExpectedDiv           *float64   `json:"expected_div" gorm:"column:expected_div"`
 	DivCollected          *float64   `json:"div_collected" gorm:"column:div_collected"`
 	CreatedAt             time.Time  `json:"-"`
-	UpdatedAt             *time.Time `json:"-"`
+	UpdatedAt             *time.Time `json:"updated_at"`
 	DeletedAt             *time.Time `json:"-"`
 }
 
