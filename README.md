@@ -35,6 +35,21 @@ make start
 
 In the future the best way is just to use a docker container.
 
+For the migrations, we are using [migrate](https://github.com/golang-migrate/migrate). It's easy to use and we have a lot of choices in terms of how to use it.
+To create a new migration hit the following command:
+```
+make migration name=MyNewMigration
+```
+
+To run new migrations hit the following command:
+```
+make migrate_up
+```
+
+To revert the last migration hit the following command:
+```
+make migrate_down
+```
 
 ## Tests
 
